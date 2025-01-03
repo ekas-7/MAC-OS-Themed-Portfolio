@@ -10,6 +10,7 @@ import {
   Settings,
   Maximize2,
   Minimize2,
+  LucideCopyright
 } from "lucide-react";
 import { useTheme } from "../contexts/ThemeContext";
 import Calendar from "./Calendar";
@@ -46,17 +47,17 @@ export default function MenuBar() {
 
   const renderBatteryIcon = () => {
     if (batteryLevel > 80)
-      return <BatteryFull className="w-4 h-4 text-green-500" />;
+      return <BatteryFull className="sm:w-4 w-6 sm:h-4 h-6 text-green-500" />;
     if (batteryLevel > 30)
-      return <BatteryCharging className="w-4 h-4 text-yellow-500" />;
-    return <BatteryLow className="w-4 h-4 text-red-500" />;
+      return <BatteryCharging className="sm:w-4 w-6 sm:h-4 h-6 text-yellow-500" />;
+    return <BatteryLow className="sm:w-4 w-6 sm:h-4 h-6 text-red-500" />;
   };
 
   const renderWifiIcon = () => {
-    if (wifiStrength === 3) return <Wifi className="w-4 h-4 text-green-500" />;
-    if (wifiStrength === 2) return <Wifi className="w-4 h-4 text-yellow-500" />;
-    if (wifiStrength === 1) return <Wifi className="w-4 h-4 text-red-500" />;
-    return <WifiOff className="w-4 h-4 text-gray-500" />;
+    if (wifiStrength === 3) return <Wifi className="sm:w-4 w-6 sm:h-4 h-6 text-green-500" />;
+    if (wifiStrength === 2) return <Wifi className="sm:w-4 w-6 sm:h-4 h-6 text-yellow-500" />;
+    if (wifiStrength === 1) return <Wifi className="sm:w-4 w-6 sm:h-4 h-6 text-red-500" />;
+    return <WifiOff className="sm:w-4 w-6 sm:h-4 h-6 text-gray-500" />;
   };
 
   const handleCalendarClick = () => {
@@ -74,46 +75,50 @@ export default function MenuBar() {
 
   return (
     <div
-      className={`fixed top-0 left-0 right-0 h-7 ${
+      className={`fixed top-0 left-0 right-0 sm:h-7 h-9 ${
         theme === "light"
           ? "bg-white/25 text-black"
           : "bg-black/25 text-white"
       } backdrop-blur-xl flex items-center sm:justify-between px-4 z-50 transition-colors duration-300 justify-evenly`}
     >
-      <div className="flex items-center space-x-4">
-        <span className="font-semibold hidden sm:block">Ekaspreet Singh Atwal</span>
-      </div>
       <div className="flex items-center space-x-2">
+     
+        <span className="font-semibold hidden sm:block">Ekaspreet Singh Atwal</span>
+        <LucideCopyright className=" sm:h-4 h-6 sm:w-4 w-6 font-thin hidden sm:block"/>
+        <span className=" hidden sm:block">2025</span>
+        
+      </div>
+      <div className="flex items-center space-x-4 sm:space-x-2">
         <button
           onClick={toggleTheme}
           aria-label="Toggle theme"
           className="p-1 rounded-full hover:bg-gray-200/50 dark:hover:bg-black/25 transition-colors"
         >
           {theme === "light" ? (
-            <Moon className="w-4 h-4" />
+            <Moon className="sm:w-4 w-6 sm:h-4 h-6" />
           ) : (
-            <Sun className="w-4 h-4" />
+            <Sun className="sm:w-4 w-6 sm:h-4 h-6" />
           )}
         </button>
-        <Settings className="w-4 h-4 hover:scale-110 transition-transform" />
-        <div className="relative group">
+        <Settings className="sm:w-4 w-6 sm:h-4 h-6 hover:scale-110 transition-transform " />
+        <div className="relative group ">
           {renderBatteryIcon()}
           <span className="absolute top-7 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
             {batteryLevel}%
           </span>
         </div>
-        <div className="relative group">
+        <div className="relative group ">
           {renderWifiIcon()}
           <span className="absolute top-7 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
             {`${wifiStrength * 33}%`}
           </span>
         </div>
 
-        <div className="relative">
+        <div className="relative  ">
           <button
             onClick={handleCalendarClick}
             aria-label="Toggle calendar"
-            className={`text-sm ${
+            className={`text-xl sm:text-sm ${
               theme === "light" ? "text-black" : "text-white"
             }`}
           >
@@ -121,11 +126,11 @@ export default function MenuBar() {
               weekday: "short",
               day: "numeric",
               month: "short",
-            })}
+            })}  
           </button>
           {isCalendarOpen && (
             <div className="absolute top-7 right-0 z-10">
-              <Calendar />
+              <Calendar /> 
             </div>
           )}
         </div>
@@ -133,7 +138,7 @@ export default function MenuBar() {
         <div className="relative">
           <button
             aria-label="Display time"
-            className={`text-sm ${
+            className={`sm:text-sm text-xl ${
               theme === "light" ? "text-black" : "text-white"
             }`}
           >
@@ -150,9 +155,9 @@ export default function MenuBar() {
           className="p-1 rounded-full hover:bg-gray-200/50 dark:hover:bg-gray-700/50 transition-colors hidden sm:block"
         >
           {isFullscreen ? (
-            <Minimize2 className="w-4 h-4" />
+            <Minimize2 className="sm:w-4 w-6 sm:h-4 h-6" />
           ) : (
-            <Maximize2 className="w-4 h-4" />
+            <Maximize2 className="sm:w-4 w-6 sm:h-4 h-6" />
           )}
         </button>
       </div>
