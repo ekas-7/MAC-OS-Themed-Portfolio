@@ -8,7 +8,7 @@ interface WindowProps {
   onClose: () => void;
 }
 
-export default function Window({ id, title, children, onClose }: WindowProps) {
+export default function Window({  title, children, onClose }: WindowProps) {
   const [position, setPosition] = useState({ x: 50, y: 50 });
   const [size, setSize] = useState({ width: 800, height: 600 });
   const [isDragging, setIsDragging] = useState(false);

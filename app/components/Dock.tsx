@@ -8,7 +8,7 @@ import {
   Mail,
   File // Import File icon
 } from 'lucide-react'
-import { useState, ReactNode } from 'react'
+import {  ReactNode } from 'react'
 
 
 interface DockItemProps {

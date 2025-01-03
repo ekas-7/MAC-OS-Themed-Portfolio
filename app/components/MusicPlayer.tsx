@@ -36,6 +36,7 @@ export default function FullScreenMusicPlayer() {
   // Previous state declarations and function definitions remain the same
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentSong, setCurrentSong] = useState(0)
+
   const [progress, setProgress] = useState(0)
   const [duration, setDuration] = useState(0)
   const [volume, setVolume] = useState(1)
@@ -226,6 +227,7 @@ export default function FullScreenMusicPlayer() {
               audioRef.current.play()
             }
           } else {
+            console.log(progress);
             nextSong()
           }
         }}

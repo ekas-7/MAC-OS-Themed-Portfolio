@@ -17,7 +17,7 @@ interface WindowProps {
   onClose: () => void;
 }
 
-const DraggableWindow = ({ id, title, onClose }: WindowProps) => {
+const DraggableWindow = ({  title, onClose }: WindowProps) => {
   const [position, setPosition] = useState({ x: 50, y: 50 });
   const [size, setSize] = useState({ width: 800, height: 600 });
   const [isDragging, setIsDragging] = useState(false);
@@ -58,7 +58,16 @@ const DraggableWindow = ({ id, title, onClose }: WindowProps) => {
       color: "hover:text-red-500 dark:hover:text-purple-400",
     },
   ];
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      
+      if (isMaximized) {
+        setIsMaximized(false);
+      }
+    }, 1000);
 
+    return () => clearTimeout(timeout);
+  }, [ isMaximized]);
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (isDragging) {
