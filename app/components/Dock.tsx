@@ -1,72 +1,109 @@
-import { Music, Code, Globe, Twitter, Terminal } from 'lucide-react'
-import { useState } from 'react'
+import { 
+  Music, 
+  Code, 
+  Globe, 
+  Twitter, 
+  Terminal,
+  User,
+  Briefcase,
+  Mail
+} from 'lucide-react'
+import { useState, ReactNode } from 'react'
 import MusicPlayer from './MusicPlayer'
 
-interface DockProps {
-  toggleWindow: (id: string) => void
+interface DockItemProps {
+  label: string;
+  onClick: () => void;
+  children: ReactNode;
 }
+
+interface DockProps {
+  toggleWindow: (id: string) => void;
+}
+
+const DockItem = ({ label, onClick, children }: DockItemProps) => (
+  <div className="group relative flex flex-col items-center">
+    <button
+      onClick={onClick}
+      className="relative w-8 h-8 sm:w-10 sm:h-10 rounded-xl 
+        bg-gradient-to-br from-gray-100/50 to-white/50 dark:from-gray-800/50 dark:to-gray-900/50 
+        backdrop-blur-lg flex items-center justify-center text-lg sm:text-xl 
+        border border-black/5 dark:border-white/10 
+        shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out
+        group-hover:scale-110 group-hover:-translate-y-1 
+        group-hover:from-white/60 group-hover:to-gray-100/60 
+        dark:group-hover:from-gray-700/60 dark:group-hover:to-gray-800/60"
+    >
+      {children}
+    </button>
+    <div className="absolute -top-10 scale-0 group-hover:scale-100 transition-all duration-200">
+      <div className="relative px-2 py-1 bg-white dark:bg-gray-900 text-gray-900 dark:text-white 
+        rounded-lg text-xs font-medium shadow-lg">
+        {label}
+        <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 
+          bg-white dark:bg-gray-900 rotate-45"></div>
+      </div>
+    </div>
+  </div>
+)
 
 export default function Dock({ toggleWindow }: DockProps) {
   const [showMusicPlayer, setShowMusicPlayer] = useState(false)
 
   return (
-    <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-full max-w-screen-lg px-4">
-      <div className="flex items-end justify-center space-x-1 sm:space-x-2 bg-white/25 dark:bg-black/25 backdrop-blur-xl rounded-2xl p-2 shadow-lg border border-white/20 dark:border-white/10 transition-colors duration-300 overflow-x-auto">
-        <button
-          className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-b from-gray-200/80 to-gray-300/80 dark:from-gray-800/80 dark:to-gray-900/80 flex items-center justify-center text-lg sm:text-2xl border border-white/20 dark:border-white/10 shadow-lg transform-gpu transition-all duration-150 hover:scale-125 hover:-translate-y-2 hover:mb-1 group"
-          onClick={() => toggleWindow('about')}
-        >
-          <span className="group-hover:scale-90 transition-transform">👤</span>
-        </button>
-        <button
-          className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-b from-gray-200/80 to-gray-300/80 dark:from-gray-800/80 dark:to-gray-900/80 flex items-center justify-center text-lg sm:text-2xl border border-white/20 dark:border-white/10 shadow-lg transform-gpu transition-all duration-150 hover:scale-125 hover:-translate-y-2 hover:mb-1 group peer"
-          onClick={() => toggleWindow('projects')}
-        >
-          <span className="group-hover:scale-90 transition-transform">💼</span>
-        </button>
-        <button
-          className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-b from-gray-200/80 to-gray-300/80 dark:from-gray-800/80 dark:to-gray-900/80 flex items-center justify-center text-lg sm:text-2xl border border-white/20 dark:border-white/10 shadow-lg transform-gpu transition-all duration-150 hover:scale-125 hover:-translate-y-2 hover:mb-1 group peer"
-          onClick={() => toggleWindow('contact')}
-        >
-          <span className="group-hover:scale-90 transition-transform">📧</span>
-        </button>
-        <button
-          className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-b from-gray-200/80 to-gray-300/80 dark:from-gray-800/80 dark:to-gray-900/80 flex items-center justify-center text-lg sm:text-2xl border border-white/20 dark:border-white/10 shadow-lg transform-gpu transition-all duration-150 hover:scale-125 hover:-translate-y-2 hover:mb-1 group peer"
-          onClick={() => setShowMusicPlayer(!showMusicPlayer)}
-        >
-          <Music className="w-4 h-4 sm:w-6 sm:h-6 text-gray-800 dark:text-white group-hover:scale-90 transition-transform" />
-        </button>
-        <button
-          className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-b from-gray-200/80 to-gray-300/80 dark:from-gray-800/80 dark:to-gray-900/80 flex items-center justify-center text-lg sm:text-2xl border border-white/20 dark:border-white/10 shadow-lg transform-gpu transition-all duration-150 hover:scale-125 hover:-translate-y-2 hover:mb-1 group peer"
-          onClick={() => toggleWindow('vscode')}
-        >
-          <Code className="w-4 h-4 sm:w-6 sm:h-6 text-gray-800 dark:text-white group-hover:scale-90 transition-transform" />
-        </button>
-        <button
-          className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-b from-gray-200/80 to-gray-300/80 dark:from-gray-800/80 dark:to-gray-900/80 flex items-center justify-center text-lg sm:text-2xl border border-white/20 dark:border-white/10 shadow-lg transform-gpu transition-all duration-150 hover:scale-125 hover:-translate-y-2 hover:mb-1 group peer"
-          onClick={() => toggleWindow('browser')}
-        >
-          <Globe className="w-4 h-4 sm:w-6 sm:h-6 text-gray-800 dark:text-white group-hover:scale-90 transition-transform" />
-        </button>
-        <button
-          className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-b from-gray-200/80 to-gray-300/80 dark:from-gray-800/80 dark:to-gray-900/80 flex items-center justify-center text-lg sm:text-2xl border border-white/20 dark:border-white/10 shadow-lg transform-gpu transition-all duration-150 hover:scale-125 hover:-translate-y-2 hover:mb-1 group peer"
-          onClick={() => window.open('https://twitter.com/yourusername', '_blank')}
-        >
-          <Twitter className="w-4 h-4 sm:w-6 sm:h-6 text-gray-800 dark:text-white group-hover:scale-90 transition-transform" />
-        </button>
-        <button
-          className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-b from-gray-200/80 to-gray-300/80 dark:from-gray-800/80 dark:to-gray-900/80 flex items-center justify-center text-lg sm:text-2xl border border-white/20 dark:border-white/10 shadow-lg transform-gpu transition-all duration-150 hover:scale-125 hover:-translate-y-2 hover:mb-1 group peer"
-          onClick={() => toggleWindow('terminal')}
-        >
-          <Terminal className="w-4 h-4 sm:w-6 sm:h-6 text-gray-800 dark:text-white group-hover:scale-90 transition-transform" />
-        </button>
+    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-auto">
+      <div className="flex items-center gap-2 sm:gap-3 px-4 py-2 
+        bg-gradient-to-br from-white/70 to-gray-100/70 
+        dark:from-gray-900/70 dark:to-gray-800/70 
+        backdrop-blur-xl rounded-xl shadow-2xl 
+        border border-black/5 dark:border-white/10 
+        transition-all duration-300">
+        <DockItem label="About" onClick={() => toggleWindow('about')}>
+          <User className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600/80 dark:text-white/80 
+            group-hover:text-gray-900 dark:group-hover:text-white" />
+        </DockItem>
+
+        <DockItem label="Projects" onClick={() => toggleWindow('projects')}>
+          <Briefcase className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600/80 dark:text-white/80 
+            group-hover:text-gray-900 dark:group-hover:text-white" />
+        </DockItem>
+
+        <DockItem label="Contact" onClick={() => toggleWindow('contact')}>
+          <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600/80 dark:text-white/80 
+            group-hover:text-gray-900 dark:group-hover:text-white" />
+        </DockItem>
+
+        <DockItem label="Music" onClick={() => setShowMusicPlayer(!showMusicPlayer)}>
+          <Music className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600/80 dark:text-white/80 
+            group-hover:text-gray-900 dark:group-hover:text-white" />
+        </DockItem>
+
+        <DockItem label="VSCode" onClick={() => toggleWindow('vscode')}>
+          <Code className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600/80 dark:text-white/80 
+            group-hover:text-gray-900 dark:group-hover:text-white" />
+        </DockItem>
+
+        <DockItem label="Browser" onClick={() => toggleWindow('browser')}>
+          <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600/80 dark:text-white/80 
+            group-hover:text-gray-900 dark:group-hover:text-white" />
+        </DockItem>
+
+        <DockItem label="Twitter" onClick={() => window.open('https://twitter.com/yourusername', '_blank')}>
+          <Twitter className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600/80 dark:text-white/80 
+            group-hover:text-gray-900 dark:group-hover:text-white" />
+        </DockItem>
+
+        <DockItem label="Terminal" onClick={() => toggleWindow('terminal')}>
+          <Terminal className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600/80 dark:text-white/80 
+            group-hover:text-gray-900 dark:group-hover:text-white" />
+        </DockItem>
       </div>
+
       {showMusicPlayer && (
-        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 w-full max-w-xs">
+        <div className="absolute -top-20 left-1/2 transform -translate-x-1/2 w-64 animate-fade-up">
           <MusicPlayer />
         </div>
       )}
     </div>
   )
 }
-

@@ -70,7 +70,7 @@ export default function MenuBar() {
       className={`fixed top-0 left-0 right-0 h-7 ${
         theme === "light"
           ? "bg-white/25 text-black"
-          : "bg-gray-800/25 text-white"
+          : "bg-black/25 text-white"
       } backdrop-blur-xl flex items-center sm:justify-between px-4 z-50 transition-colors duration-300 justify-evenly`}
     >
       <div className="flex items-center space-x-4">
@@ -79,7 +79,7 @@ export default function MenuBar() {
       <div className="flex items-center space-x-2">
         <button
           onClick={toggleTheme}
-          className="p-1 rounded-full hover:bg-gray-200/50 dark:hover:bg-gray-700/50 transition-colors"
+          className="p-1 rounded-full hover:bg-gray-200/50 dark:hover:bg-black/25 transition-colors"
         >
           {theme === "light" ? (
             <Moon className="w-4 h-4" />
