@@ -9,7 +9,7 @@ import {
   File // Import File icon
 } from 'lucide-react'
 import { useState, ReactNode } from 'react'
-import MusicPlayer from './MusicPlayer'
+
 
 interface DockItemProps {
   label: string;
@@ -48,7 +48,7 @@ const DockItem = ({ label, onClick, children }: DockItemProps) => (
 )
 
 export default function Dock({ toggleWindow }: DockProps) {
-  const [showMusicPlayer, setShowMusicPlayer] = useState(false)
+  
 
   return (
     <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-auto">
@@ -73,7 +73,7 @@ export default function Dock({ toggleWindow }: DockProps) {
             group-hover:text-gray-900 dark:group-hover:text-white" />
         </DockItem>
 
-        <DockItem label="Music" onClick={() => setShowMusicPlayer(!showMusicPlayer)}>
+        <DockItem label="Music" onClick={() => toggleWindow('music-player')}>
           <Music className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600/80 dark:text-white/80 
             group-hover:text-gray-900 dark:group-hover:text-white" />
         </DockItem>
@@ -100,11 +100,7 @@ export default function Dock({ toggleWindow }: DockProps) {
         </DockItem>
       </div>
 
-      {showMusicPlayer && (
-        <div className="absolute -top-20 left-1/2 transform -translate-x-1/2 w-64 animate-fade-up">
-          <MusicPlayer />
-        </div>
-      )}
+      
     </div>
   )
 }

@@ -12,6 +12,7 @@ import DraggableWindow from "./components/BrowserWindow";
 import Terminal from "./components/Terminal";
 import ResumeWindow from "./components/ResumeWindow";
 import wallpaper from "@/public/wallpaper-white.jpg";
+import MusicPlayer from "./components/MusicPlayer";
 
 export default function Home() {
   const [openWindows, setOpenWindows] = useState<string[]>([]);
@@ -23,12 +24,27 @@ export default function Home() {
     );
   };
 
+  // Function to handle Cmd + T event
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if ((event.metaKey || event.ctrlKey) && event.key === "t")  {
+      
+      toggleWindow("terminal");
+    }
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 2000);
 
-    return () => clearTimeout(timer);
+    // Adding the keydown event listener for Cmd + T
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      clearTimeout(timer);
+      // Cleanup the event listener when the component unmounts
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
   return (
@@ -117,6 +133,15 @@ export default function Home() {
               onClose={() => toggleWindow("terminal")}
             >
               <Terminal />
+            </Window>
+          )}
+          {openWindows.includes("music-player") && (
+            <Window
+              id="music-player"
+              title="Terminal"
+              onClose={() => toggleWindow("music-player")}
+            >
+              <MusicPlayer />
             </Window>
           )}
           {openWindows.includes("resume") && (
