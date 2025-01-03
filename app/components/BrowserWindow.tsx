@@ -115,7 +115,7 @@ const DraggableWindow = ({ id, title, onClose }: WindowProps) => {
   const handleMinimize = () => {
     if (windowRef.current) {
       setPosition({ x: 50, y: 50 });
-      setSize({ width: 850, height: 600 });
+      setSize({ width: 800, height: 600 });
       setIsMaximized(false);
     }
   };
