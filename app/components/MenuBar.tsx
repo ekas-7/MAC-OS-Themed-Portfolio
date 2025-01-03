@@ -8,6 +8,8 @@ import {
   Sun,
   Moon,
   Settings,
+  Maximize2,
+  Minimize2,
 } from "lucide-react";
 import { useTheme } from "../contexts/ThemeContext";
 import Calendar from "./Calendar";
@@ -18,6 +20,7 @@ export default function MenuBar() {
   const [batteryLevel, setBatteryLevel] = useState(100);
   const [wifiStrength, setWifiStrength] = useState(3);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -51,6 +54,15 @@ export default function MenuBar() {
 
   const handleCalendarClick = () => {
     setIsCalendarOpen(!isCalendarOpen);
+  };
+
+  const handleFullscreenToggle = () => {
+    if (isFullscreen) {
+      document.exitFullscreen();
+    } else {
+      document.documentElement.requestFullscreen();
+    }
+    setIsFullscreen(!isFullscreen);
   };
 
   return (
@@ -121,6 +133,17 @@ export default function MenuBar() {
             })}
           </button>
         </div>
+
+        <button
+          onClick={handleFullscreenToggle}
+          className="p-1 rounded-full hover:bg-gray-200/50 dark:hover:bg-gray-700/50 transition-colors hidden sm:block"
+        >
+          {isFullscreen ? (
+            <Minimize2 className="w-4 h-4" />
+          ) : (
+            <Maximize2 className="w-4 h-4" />
+          )}
+        </button>
       </div>
     </div>
   );
