@@ -191,15 +191,15 @@ interface CursedTechnique {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-900 text-gray-300">
+    <div className="flex flex-col h-screen bg-gray-100/25  dark:bg-gray-900/25 w-full">
       <div className="flex flex-1 text-xs sm:text-sm">
-        <div className="w-48 border-r border-gray-700 bg-gray-800">
+        <div className="w-48 border-r border-gray-700 dark:bg-gray-800 bg-gray-100 text-black dark:text-gray-300">
           <div className="p-2">
             {Object.entries(projects).map(([projectName, project]) => (
               <div key={projectName} className="mb-4">
                 <div className="flex items-center justify-between p-1">
                   <div
-                    className="flex items-center cursor-pointer hover:bg-gray-700 rounded flex-1"
+                    className="flex items-center cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-700 rounded flex-1"
                     onClick={() =>
                       setExpandedProjects((prev) => ({
                         ...prev,
@@ -247,7 +247,7 @@ interface CursedTechnique {
                   project.files.map((file) => (
                     <div
                       key={file.name}
-                      className={`flex items-center p-1 cursor-pointer rounded hover:bg-gray-700 ml-4 ${selectedFile === file ? "bg-gray-700" : ""
+                      className={`flex items-center p-1 cursor-pointer rounded hover:bg-gray-300 dark:hover:bg-gray-700 ml-4 ${selectedFile === file ? "dark:bg-gray-700 bg-gray-300" : ""
                         }`}
                       onClick={() => {
                         setSelectedProject(projectName);
@@ -265,7 +265,7 @@ interface CursedTechnique {
 
         <div className="flex-1 overflow-auto">
           <div className="flex">
-            <div className="p-4 text-right text-gray-500 bg-gray-800 select-none w-12">
+            <div className="p-4 text-right dark:text-gray-500 dark:bg-gray-800 text-black bg-gray-300 select-none w-12">
               {selectedFile.content.split("\n").map((_, i) => (
                 <div key={i}>{i + 1}</div>
               ))}
@@ -289,7 +289,7 @@ interface CursedTechnique {
                 }));
                 setSelectedFile(updatedFile);
               }}
-              className="p-4 flex-1 bg-gray-900 text-gray-300 font-mono resize-none outline-none"
+              className="p-4 flex-1 bg-inherit dark:bg-inherit dark:text-gray-300 text-black  font-mono resize-none outline-none"
               spellCheck="false"
               style={{
                 minHeight: "100%",

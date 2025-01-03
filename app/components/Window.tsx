@@ -150,7 +150,7 @@ export default function Window({ id, title, children, onClose }: WindowProps) {
         </span>
         <div className="w-16" />
       </div>
-      <div className="bg-white/50 dark:bg-black/50 backdrop-blur-md p-4 h-[calc(100%-2rem)] overflow-auto text-gray-800 dark:text-gray-200 transition-colors duration-300">
+      <div className="bg-white/50 dark:bg-black/50 backdrop-blur-md  h-[calc(100%-2rem)] overflow-auto text-gray-800 dark:text-gray-200 transition-colors duration-300">
         {children}
       </div>
       <div
