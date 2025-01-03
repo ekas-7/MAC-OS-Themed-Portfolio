@@ -26,22 +26,23 @@ export default function Home() {
 
   // Function to handle Cmd + T event
   const handleKeyDown = (event: KeyboardEvent) => {
-    if ((event.metaKey || event.ctrlKey) && event.key === "t")  {
-      
+    if ((event.metaKey || event.ctrlKey) && event.key === "t") {
       toggleWindow("terminal");
     }
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    // Preload the background image
+    const img = new Image();
+    img.src = wallpaper.src;
+    img.onload = () => {
       setIsLoading(false);
-    }, 2000);
+    };
 
     // Adding the keydown event listener for Cmd + T
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      clearTimeout(timer);
       // Cleanup the event listener when the component unmounts
       window.removeEventListener("keydown", handleKeyDown);
     };
@@ -138,7 +139,7 @@ export default function Home() {
           {openWindows.includes("music-player") && (
             <Window
               id="music-player"
-              title="Terminal"
+              title="Music Player"
               onClose={() => toggleWindow("music-player")}
             >
               <MusicPlayer />
