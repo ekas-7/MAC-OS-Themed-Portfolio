@@ -26,7 +26,7 @@ const BrowserWindow: React.FC = () => {
       <div className="flex-1 bg-white dark:bg-gray-800 p-2 sm:p-4 overflow-auto">
         <h1 className="text-lg sm:text-2xl font-bold mb-2 sm:mb-4 text-gray-800 dark:text-white">Welcome to My Portfolio</h1>
         <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-2 sm:mb-4">
-          Hi, I'm a web developer passionate about creating beautiful and functional websites.
+          Hi, I am a web developer passionate about creating beautiful and functional websites.
         </p>
         <h2 className="text-base sm:text-xl font-semibold mb-1 sm:mb-2 text-gray-800 dark:text-white">My Projects</h2>
         <ul className="list-disc pl-4 sm:pl-5 text-xs sm:text-sm text-gray-600 dark:text-gray-300">

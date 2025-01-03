@@ -18,21 +18,28 @@ export default function MenuBar() {
   const { theme, toggleTheme } = useTheme();
   const [dateTime, setDateTime] = useState(new Date());
   const [batteryLevel, setBatteryLevel] = useState(100);
-  const [wifiStrength, setWifiStrength] = useState(3);
+  const wifiStrength = 3;
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
+  // Update Date and Time
   useEffect(() => {
     const intervalId = setInterval(() => {
       setDateTime(new Date());
     }, 1000);
 
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  // Update Battery Level (simulated)
+  useEffect(() => {
     const batteryInterval = setInterval(() => {
       setBatteryLevel((prev) => (prev > 10 ? prev - 1 : 100));
     }, 5000);
 
     return () => {
-      clearInterval(intervalId);
       clearInterval(batteryInterval);
     };
   }, []);
@@ -79,6 +86,7 @@ export default function MenuBar() {
       <div className="flex items-center space-x-2">
         <button
           onClick={toggleTheme}
+          aria-label="Toggle theme"
           className="p-1 rounded-full hover:bg-gray-200/50 dark:hover:bg-black/25 transition-colors"
         >
           {theme === "light" ? (
@@ -96,14 +104,15 @@ export default function MenuBar() {
         </div>
         <div className="relative group">
           {renderWifiIcon()}
-          <span className="absolute top-7 left-1/2 transform -translate-x-1/2 bg-gray-800  text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-            {wifiStrength === 0 ? "No Signal" : `${wifiStrength * 33}%`}
+          <span className="absolute top-7 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+            {`${wifiStrength * 33}%`}
           </span>
         </div>
 
         <div className="relative">
           <button
             onClick={handleCalendarClick}
+            aria-label="Toggle calendar"
             className={`text-sm ${
               theme === "light" ? "text-black" : "text-white"
             }`}
@@ -123,6 +132,7 @@ export default function MenuBar() {
 
         <div className="relative">
           <button
+            aria-label="Display time"
             className={`text-sm ${
               theme === "light" ? "text-black" : "text-white"
             }`}
@@ -136,6 +146,7 @@ export default function MenuBar() {
 
         <button
           onClick={handleFullscreenToggle}
+          aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
           className="p-1 rounded-full hover:bg-gray-200/50 dark:hover:bg-gray-700/50 transition-colors hidden sm:block"
         >
           {isFullscreen ? (

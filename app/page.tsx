@@ -10,6 +10,7 @@ import { ThemeProvider } from './contexts/ThemeContext'
 import VSCodeEditor from './components/VSCodeEditor'
 import BrowserWindow from './components/BrowserWindow'
 import Terminal from './components/Terminal'
+import ResumeWindow from './components/ResumeWindow'
 import wallpaper from '@/public/wallpaper-white.jpg'
 
 export default function Home() {
@@ -47,7 +48,7 @@ export default function Home() {
             <Window id="about" title="About Me" onClose={() => toggleWindow('about')}>
               <div className="p-4">
                 <h2 className="text-2xl font-bold mb-2">Ekaspreet Singh Atwal</h2>
-                <p>I'm a web developer passionate about creating beautiful and functional websites.</p>
+                <p>I am a web developer passionate about creating beautiful and functional websites.</p>
               </div>
             </Window>
           )}
@@ -88,11 +89,10 @@ export default function Home() {
               <Terminal />
             </Window>
           )}
+          {openWindows.includes('resume') && (
+            <ResumeWindow onClose={() => toggleWindow('resume')} />
+          )}
           <Dock toggleWindow={toggleWindow} />
-          {/* Sample audio files */}
-          <audio id="song1" src="/song1.mp3" />
-          <audio id="song2" src="/song2.mp3" />
-          <audio id="song3" src="/song3.mp3" />
         </main>
       )}
     </ThemeProvider>
