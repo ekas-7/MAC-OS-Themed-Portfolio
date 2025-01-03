@@ -23,21 +23,13 @@ const songs: Song[] = [
     src: "/Dawood.mp3"
   },
   {
-    title: "Stairway to Heaven",
-    artist: "Led Zeppelin",
-    album: "Led Zeppelin IV",
+    title: "MockinBird",
+    artist: "Eminem",
+    album: "Curtain Call",
     duration: 482,
-    albumArt: "/placeholder.svg?height=300&width=300",
-    src: "/song2.mp3"
+    albumArt: "/mockinbird.jpg",
+    src: "/Eminem-Mockingbird-.mp3"
   },
-  {
-    title: "Hotel California",
-    artist: "Eagles",
-    album: "Hotel California",
-    duration: 391,
-    albumArt: "/placeholder.svg?height=300&width=300",
-    src: "/song3.mp3"
-  }
 ]
 
 export default function FullScreenMusicPlayer() {
