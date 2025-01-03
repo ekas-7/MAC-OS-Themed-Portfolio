@@ -10,6 +10,7 @@ import { ThemeProvider } from './contexts/ThemeContext'
 import VSCodeEditor from './components/VSCodeEditor'
 import BrowserWindow from './components/BrowserWindow'
 import Terminal from './components/Terminal'
+import wallpaper from '@/public/wallpaper-white.jpg'
 
 export default function Home() {
   const [openWindows, setOpenWindows] = useState<string[]>([])
@@ -34,7 +35,12 @@ export default function Home() {
       {isLoading ? (
         <ApplePreloader />
       ) : (
-        <main className="h-screen w-screen overflow-hidden bg-[url('/wallpaper-light.jpg')] dark:bg-[url('/wallpaper-dark.jpg')] bg-cover bg-center text-black dark:text-white transition-colors duration-300">
+        <main
+          className="h-screen w-screen overflow-hidden bg-cover bg-center text-black dark:text-white transition-colors duration-300"
+          style={{
+            backgroundImage: `url(${wallpaper.src})`,
+          }}
+        >
           <MenuBar />
           <Desktop toggleWindow={toggleWindow} />
           {openWindows.includes('about') && (
@@ -92,4 +98,3 @@ export default function Home() {
     </ThemeProvider>
   )
 }
-
