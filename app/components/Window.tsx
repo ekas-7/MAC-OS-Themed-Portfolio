@@ -1,23 +1,37 @@
-import { useState, useRef, useEffect } from 'react'
-import { X, Minus, Square } from 'lucide-react'
+import { useState, useRef, useEffect } from "react";
+import { X, Minus, Square } from "lucide-react";
 
 interface WindowProps {
-  id: string
-  title: string
-  children: React.ReactNode
-  onClose: () => void
+  id: string;
+  title: string;
+  children: React.ReactNode;
+  onClose: () => void;
 }
 
 export default function Window({ id, title, children, onClose }: WindowProps) {
-  const [position, setPosition] = useState({ x: 50, y: 50 })
-  const [size, setSize] = useState({ width: 800, height: 600 })
-  const [isDragging, setIsDragging] = useState(false)
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
-  const [isMaximized, setIsMaximized] = useState(false)
-  const [isResizing, setIsResizing] = useState(false)
-  const [resizeOffset, setResizeOffset] = useState({ x: 0, y: 0 })
-  
-  const windowRef = useRef<HTMLDivElement>(null)
+  const [position, setPosition] = useState({ x: 50, y: 50 });
+  const [size, setSize] = useState({ width: 800, height: 600 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [isMaximized, setIsMaximized] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const [resizeOffset, setResizeOffset] = useState({ x: 0, y: 0 });
+
+  const windowRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (isMinimized) {
+        setIsMinimized(false);
+      }
+      if (isMaximized) {
+        setIsMaximized(false);
+      }
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [isMinimized, isMaximized]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -25,65 +39,70 @@ export default function Window({ id, title, children, onClose }: WindowProps) {
         setPosition({
           x: e.clientX - dragOffset.x,
           y: e.clientY - dragOffset.y,
-        })
+        });
       }
       if (isResizing) {
         setSize({
           width: e.clientX - windowRef.current!.offsetLeft - resizeOffset.x,
           height: e.clientY - windowRef.current!.offsetTop - resizeOffset.y,
-        })
+        });
       }
-    }
+    };
 
     const handleMouseUp = () => {
-      setIsDragging(false)
-      setIsResizing(false)
-    }
+      setIsDragging(false);
+      setIsResizing(false);
+    };
 
-    document.addEventListener('mousemove', handleMouseMove)
-    document.addEventListener('mouseup', handleMouseUp)
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseup', handleMouseUp)
-    }
-  }, [isDragging, dragOffset, isResizing, resizeOffset])
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isDragging, dragOffset, isResizing, resizeOffset]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (windowRef.current) {
-      const rect = windowRef.current.getBoundingClientRect()
+      const rect = windowRef.current.getBoundingClientRect();
       setDragOffset({
         x: e.clientX - rect.left,
         y: e.clientY - rect.top,
-      })
-      setIsDragging(true)
+      });
+      setIsDragging(true);
     }
-  }
+  };
 
   const handleMaximize = () => {
     if (windowRef.current) {
-      setPosition({ x: 5, y: 35 })
-      setSize({ width: window.innerWidth - 10, height: window.innerHeight - 40 })
-      setIsMaximized(true)
+      setPosition({ x: 5, y: 35 });
+      setSize({
+        width: window.innerWidth - 10,
+        height: window.innerHeight - 40,
+      });
+      setIsMaximized(true);
+      setIsMinimized(false);
     }
-  }
+  };
 
   const handleMinimize = () => {
     if (windowRef.current) {
-      setPosition({ x: 50, y: 50 })
-      setSize({ width: 800, height: 600 })
-      setIsMaximized(false)
+      setPosition({ x: 50, y: 50 });
+      setSize({ width: 800, height: 600 });
+      setIsMaximized(false);
+      setIsMinimized(true);
     }
-  }
+  };
 
   const handleResizeMouseDown = (e: React.MouseEvent) => {
-    const rect = windowRef.current!.getBoundingClientRect()
+    const rect = windowRef.current!.getBoundingClientRect();
     setResizeOffset({
       x: e.clientX - rect.right,
       y: e.clientY - rect.bottom,
-    })
-    setIsResizing(true)
-  }
+    });
+    setIsResizing(true);
+  };
 
   return (
     <div
@@ -94,6 +113,10 @@ export default function Window({ id, title, children, onClose }: WindowProps) {
         top: `${position.y}px`,
         width: `${size.width}px`,
         height: `${size.height}px`,
+        transition:
+          isMaximized || isMinimized
+            ? "width 0.3s ease, height 0.3s ease"
+            : "none",
       }}
     >
       <div
@@ -135,5 +158,5 @@ export default function Window({ id, title, children, onClose }: WindowProps) {
         onMouseDown={handleResizeMouseDown}
       />
     </div>
-  )
+  );
 }
