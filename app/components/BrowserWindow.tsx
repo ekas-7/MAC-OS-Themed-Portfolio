@@ -1,59 +1,63 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { 
-  Github, 
-  Linkedin, 
-  X, 
-  Instagram, 
+import React, { useState, useRef, useEffect } from "react";
+import {
+  Github,
+  Linkedin,
+  Twitter,
+  Instagram,
   Mail,
-  ArrowRight 
-} from 'lucide-react'
+  ArrowRight,
+  X,
+  Minus,
+  Square,
+} from "lucide-react";
 
 interface WindowProps {
-  id: string
-  title: string
-  onClose: () => void
+  id: string;
+  title: string;
+  onClose: () => void;
 }
 
 const DraggableWindow = ({ id, title, onClose }: WindowProps) => {
-  const [position, setPosition] = useState({ x: 50, y: 50 })
-  const [size, setSize] = useState({ width: 800, height: 600 })
-  const [isDragging, setIsDragging] = useState(false)
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
-  const [isResizing, setIsResizing] = useState(false)
-  const windowRef = useRef<HTMLDivElement>(null)
+  const [position, setPosition] = useState({ x: 50, y: 50 });
+  const [size, setSize] = useState({ width: 800, height: 600 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [isResizing, setIsResizing] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(false); // Track maximize state
+  const windowRef = useRef<HTMLDivElement>(null);
 
   const socialLinks = [
     {
       icon: <Github className="w-6 h-6" />,
       label: "GitHub",
       url: "github.com/ekas-7",
-      color: "hover:text-purple-600 dark:hover:text-purple-400"
+      color: "hover:text-purple-600 dark:hover:text-purple-400",
     },
     {
       icon: <Linkedin className="w-6 h-6" />,
       label: "LinkedIn",
       url: "linkedin.com/in/ekas7",
-      color: "hover:text-blue-600 dark:hover:text-purple-400"
+      color: "hover:text-blue-600 dark:hover:text-purple-400",
     },
     {
-      icon: <X className="w-6 h-6" />,
+      icon: <Twitter className="w-6 h-6" />,
       label: "X",
       url: "twitter.com/Ekas_7",
-      color: "hover:text-sky-500 dark:hover:text-purple-400"
+      color: "hover:text-sky-500 dark:hover:text-purple-400",
     },
     {
       icon: <Instagram className="w-6 h-6" />,
       label: "Instagram",
       url: "instagram.com/ekas_7",
-      color: "hover:text-pink-600 dark:hover:text-purple-400"
+      color: "hover:text-pink-600 dark:hover:text-purple-400",
     },
     {
       icon: <Mail className="w-6 h-6" />,
       label: "Email",
       url: "mailto:ekasatwal.work@gmail.com",
-      color: "hover:text-red-500 dark:hover:text-purple-400"
-    }
-  ]
+      color: "hover:text-red-500 dark:hover:text-purple-400",
+    },
+  ];
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -61,56 +65,65 @@ const DraggableWindow = ({ id, title, onClose }: WindowProps) => {
         setPosition({
           x: e.clientX - dragOffset.x,
           y: e.clientY - dragOffset.y,
-        })
+        });
       }
       if (isResizing && windowRef.current) {
-        const newWidth = Math.max(300, e.clientX - position.x)
-        const newHeight = Math.max(200, e.clientY - position.y)
-        setSize({ width: newWidth, height: newHeight })
+        const newWidth = Math.max(300, e.clientX - position.x);
+        const newHeight = Math.max(200, e.clientY - position.y);
+        setSize({ width: newWidth, height: newHeight });
       }
-    }
+    };
 
     const handleMouseUp = () => {
-      setIsDragging(false)
-      setIsResizing(false)
-    }
+      setIsDragging(false);
+      setIsResizing(false);
+    };
 
-    document.addEventListener('mousemove', handleMouseMove)
-    document.addEventListener('mouseup', handleMouseUp)
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseup', handleMouseUp)
-    }
-  }, [isDragging, isResizing, dragOffset, position])
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isDragging, isResizing, dragOffset, position]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (windowRef.current) {
-      const rect = windowRef.current.getBoundingClientRect()
+      const rect = windowRef.current.getBoundingClientRect();
       setDragOffset({
         x: e.clientX - rect.left,
         y: e.clientY - rect.top,
-      })
-      setIsDragging(true)
+      });
+      setIsDragging(true);
     }
-  }
+  };
 
   const handleResizeMouseDown = (e: React.MouseEvent) => {
-    setIsResizing(true)
-    e.stopPropagation()
-  }
+    setIsResizing(true);
+    e.stopPropagation();
+  };
 
   const handleMaximize = () => {
     if (windowRef.current) {
-      setPosition({ x: 0, y: 0 })
-      setSize({ width: window.innerWidth, height: window.innerHeight })
+      setPosition({ x: 5, y: 35 })
+      setSize({ width: window.innerWidth-10, height: window.innerHeight - 40 })
+      setIsMaximized(true)
     }
   }
+
+  const handleMinimize = () => {
+    if (windowRef.current) {
+      setPosition({ x: 50, y: 50 });
+      setSize({ width: 850, height: 600 });
+      setIsMaximized(false);
+    }
+  };
 
   return (
     <div
       ref={windowRef}
-      className="absolute bg-white/25 dark:bg-black/25 backdrop-blur-xl rounded-xl shadow-2xl overflow-hidden border border-white/20 dark:border-white/10"
+      className="absolute bg-white/25 dark:bg-black/25 backdrop-blur-xl rounded-xl shadow-2xl overflow-hidden border border-white/20 dark:border-white/10 transition-all duration-300"
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
@@ -123,20 +136,42 @@ const DraggableWindow = ({ id, title, onClose }: WindowProps) => {
         onMouseDown={handleMouseDown}
       >
         <div className="flex items-center space-x-2">
-          <button className="w-3 h-3 rounded-full bg-red-500" onClick={onClose} />
-          <button className="w-3 h-3 rounded-full bg-yellow-500" />
-          <button className="w-3 h-3 rounded-full bg-green-500" onClick={handleMaximize} />
+          <button
+            className="w-3 h-3 rounded-full bg-red-500 flex items-center justify-center"
+            onClick={onClose}
+          >
+            <X className="w-4 h-4 p-0.5 text-white dark:text-black" />
+          </button>
+
+          <button className="w-3 h-3 rounded-full bg-yellow-500 flex items-center justify-center"
+            onClick={handleMinimize}
+          >
+            <Minus className="w-4 h-4 p-0.5 text-white dark:text-black" />
+          </button>
+
+          <button
+            className="w-3 h-3 rounded-full bg-green-500 flex items-center justify-center"
+            onClick={handleMaximize}
+          >
+            <Square className="w-4 h-4 p-0.5 text-white dark:text-black" />
+          </button>
         </div>
-        <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">{title}</span>
+
+        <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+          {title}
+        </span>
         <div className="w-16" />
       </div>
-      
-      <div className="bg-white/50 dark:bg-black/50 backdrop-blur-md p-6 overflow-auto" style={{ height: `calc(100% - 2rem)` }}>
+
+      <div
+        className="bg-white/50 dark:bg-black/50 backdrop-blur-md p-6 overflow-auto"
+        style={{ height: `calc(100% - 2rem)` }}
+      >
         <div className="max-w-2xl mx-auto">
           <h1 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">
             Connect With Me
           </h1>
-          
+
           <div className="grid gap-4">
             {socialLinks.map((link, index) => (
               <a
@@ -171,7 +206,7 @@ const DraggableWindow = ({ id, title, onClose }: WindowProps) => {
         onMouseDown={handleResizeMouseDown}
       />
     </div>
-  )
-}
+  );
+};
 
-export default DraggableWindow
+export default DraggableWindow;

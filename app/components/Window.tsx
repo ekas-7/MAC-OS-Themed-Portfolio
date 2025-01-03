@@ -10,8 +10,13 @@ interface WindowProps {
 
 export default function Window({ id, title, children, onClose }: WindowProps) {
   const [position, setPosition] = useState({ x: 50, y: 50 })
+  const [size, setSize] = useState({ width: 800, height: 600 })
   const [isDragging, setIsDragging] = useState(false)
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
+  const [isMaximized, setIsMaximized] = useState(false)
+  const [isResizing, setIsResizing] = useState(false)
+  const [resizeOffset, setResizeOffset] = useState({ x: 0, y: 0 })
+  
   const windowRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -22,10 +27,17 @@ export default function Window({ id, title, children, onClose }: WindowProps) {
           y: e.clientY - dragOffset.y,
         })
       }
+      if (isResizing) {
+        setSize({
+          width: e.clientX - windowRef.current!.offsetLeft - resizeOffset.x,
+          height: e.clientY - windowRef.current!.offsetTop - resizeOffset.y,
+        })
+      }
     }
 
     const handleMouseUp = () => {
       setIsDragging(false)
+      setIsResizing(false)
     }
 
     document.addEventListener('mousemove', handleMouseMove)
@@ -35,7 +47,7 @@ export default function Window({ id, title, children, onClose }: WindowProps) {
       document.removeEventListener('mousemove', handleMouseMove)
       document.removeEventListener('mouseup', handleMouseUp)
     }
-  }, [isDragging, dragOffset])
+  }, [isDragging, dragOffset, isResizing, resizeOffset])
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (windowRef.current) {
@@ -48,17 +60,40 @@ export default function Window({ id, title, children, onClose }: WindowProps) {
     }
   }
 
+  const handleMaximize = () => {
+    if (windowRef.current) {
+      setPosition({ x: 5, y: 35 })
+      setSize({ width: window.innerWidth - 10, height: window.innerHeight - 40 })
+      setIsMaximized(true)
+    }
+  }
+
+  const handleMinimize = () => {
+    if (windowRef.current) {
+      setPosition({ x: 50, y: 50 })
+      setSize({ width: 800, height: 600 })
+      setIsMaximized(false)
+    }
+  }
+
+  const handleResizeMouseDown = (e: React.MouseEvent) => {
+    const rect = windowRef.current!.getBoundingClientRect()
+    setResizeOffset({
+      x: e.clientX - rect.right,
+      y: e.clientY - rect.bottom,
+    })
+    setIsResizing(true)
+  }
+
   return (
     <div
       ref={windowRef}
-      className="absolute bg-white/80 dark:bg-black/80 backdrop-blur-xl rounded-xl shadow-2xl overflow-hidden border border-white/20 dark:border-white/10 transition-colors duration-300"
+      className="absolute bg-white/25 dark:bg-black/25 backdrop-blur-xl rounded-xl shadow-2xl overflow-hidden border border-white/20 dark:border-white/10 transition-all duration-300"
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
-        width: 'calc(100% - 2rem)',
-        height: 'calc(100% - 6rem)',
-        maxWidth: '800px',
-        maxHeight: '600px',
+        width: `${size.width}px`,
+        height: `${size.height}px`,
       }}
     >
       <div
@@ -66,15 +101,39 @@ export default function Window({ id, title, children, onClose }: WindowProps) {
         onMouseDown={handleMouseDown}
       >
         <div className="flex items-center space-x-2">
-          <button className="w-3 h-3 rounded-full bg-red-500" onClick={onClose} />
-          <button className="w-3 h-3 rounded-full bg-yellow-500" />
-          <button className="w-3 h-3 rounded-full bg-green-500" />
+          <button
+            className="w-3 h-3 rounded-full bg-red-500 flex items-center justify-center"
+            onClick={onClose}
+          >
+            <X className="w-4 h-4 p-0.5 text-white dark:text-black" />
+          </button>
+
+          <button
+            className="w-3 h-3 rounded-full bg-yellow-500 flex items-center justify-center"
+            onClick={handleMinimize}
+          >
+            <Minus className="w-4 h-4 p-0.5 text-white dark:text-black" />
+          </button>
+
+          <button
+            className="w-3 h-3 rounded-full bg-green-500 flex items-center justify-center"
+            onClick={handleMaximize}
+          >
+            <Square className="w-4 h-4 p-0.5 text-white dark:text-black" />
+          </button>
         </div>
-        <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">{title}</span>
+        <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+          {title}
+        </span>
         <div className="w-16" />
       </div>
-      <div className="bg-white/50 dark:bg-black/50 backdrop-blur-md p-4 h-[calc(100%-2rem)] overflow-auto text-gray-800 dark:text-gray-200 transition-colors duration-300">{children}</div>
+      <div className="bg-white/50 dark:bg-black/50 backdrop-blur-md p-4 h-[calc(100%-2rem)] overflow-auto text-gray-800 dark:text-gray-200 transition-colors duration-300">
+        {children}
+      </div>
+      <div
+        className="absolute bottom-0 right-0 w-6 h-6 cursor-se-resize "
+        onMouseDown={handleResizeMouseDown}
+      />
     </div>
   )
 }
-

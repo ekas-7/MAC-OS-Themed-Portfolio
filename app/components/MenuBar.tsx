@@ -47,14 +47,14 @@ export default function MenuBar() {
 
   const renderBatteryIcon = () => {
     if (batteryLevel > 80)
-      return <BatteryFull className="sm:w-4 w-6 sm:h-4 h-6 text-green-500" />;
+      return <BatteryFull className="sm:w-4 w-6 sm:h-4 h-6 text-black dark:text-white" />;
     if (batteryLevel > 30)
-      return <BatteryCharging className="sm:w-4 w-6 sm:h-4 h-6 text-yellow-500" />;
+      return <BatteryCharging className="sm:w-4 w-6 sm:h-4 h-6 text-black dark:text-white" />;
     return <BatteryLow className="sm:w-4 w-6 sm:h-4 h-6 text-red-500" />;
   };
 
   const renderWifiIcon = () => {
-    if (wifiStrength === 3) return <Wifi className="sm:w-4 w-6 sm:h-4 h-6 text-green-500" />;
+    if (wifiStrength === 3) return <Wifi className="sm:w-4 w-6 sm:h-4 h-6 text-black dark:text-white" />;
     if (wifiStrength === 2) return <Wifi className="sm:w-4 w-6 sm:h-4 h-6 text-yellow-500" />;
     if (wifiStrength === 1) return <Wifi className="sm:w-4 w-6 sm:h-4 h-6 text-red-500" />;
     return <WifiOff className="sm:w-4 w-6 sm:h-4 h-6 text-gray-500" />;
@@ -75,10 +75,10 @@ export default function MenuBar() {
 
   return (
     <div
-      className={`fixed top-0 left-0 right-0 sm:h-7 h-9 ${
+      className={`fixed top-0 left-0 right-0 sm:h-8 h-9 ${
         theme === "light"
-          ? "bg-white/25 text-black"
-          : "bg-black/25 text-white"
+          ? "bg-gradient-to-br from-white/70 to-gray-100/70  text-black"
+          : "bg-gradient-to-br from-gray-900/70 dark:to-gray-800/70  text-white"
       } backdrop-blur-xl flex items-center sm:justify-between px-4 z-50 transition-colors duration-300 justify-evenly`}
     >
       <div className="flex items-center space-x-2">
