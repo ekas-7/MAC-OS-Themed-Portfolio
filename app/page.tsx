@@ -15,7 +15,7 @@ import wallpaper from "@/public/wallpaper-white.jpg";
 import MusicPlayer from "./components/MusicPlayer";
 import ProfileCard from "./components/AboutMe";
 import ConnectWithMe from "./components/Social";
-
+import Projects from "./components/Project";
 
 
 export default function Home() {
@@ -79,28 +79,7 @@ export default function Home() {
                 title="My Projects"
                 onClose={() => toggleWindow("projects")}
               >
-                <div className="p-4">
-                  <h2 className="text-2xl font-bold mb-2">Projects</h2>
-                  <ul className="list-disc list-inside">
-                    Projects 1. Chat-App A real-time messaging application
-                    enabling instant communication with a user-friendly
-                    interface. Features: Real-time messaging, user presence
-                    indicators, message history. Tech Stack: Node.js,
-                    Express.js, Socket.IO, MongoDB, HTML/CSS, JavaScript. GitHub
-                    Repository 2. SAMP - NIT Jalandhar A web platform for
-                    managing user data and administrative tasks for the Student
-                    Academic Mentorship Program (SAMP). Features: User
-                    authentication, role-based access control, CRUD operations
-                    for users. Tech Stack: Node.js, Express.js, React, MongoDB,
-                    Tailwind CSS. GitHub Repository 3. Blog It A blogging
-                    platform inspired by Medium, enabling users to create, edit,
-                    and explore blog posts seamlessly. Features: JWT-based
-                    authentication, skeleton loading for UX, Prisma-based
-                    database management. Tech Stack: React, Vite, Cloudflare
-                    Workers, TypeScript, Prisma, PostgreSQL, Zod. GitHub
-                    Repository
-                  </ul>
-                </div>
+                <Projects />
               </Window>
             )}
             {openWindows.includes("contact") && (
