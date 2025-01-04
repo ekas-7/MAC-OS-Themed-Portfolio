@@ -26,8 +26,7 @@ export default function Home() {
 
   // Function to handle Cmd + T event
   const handleKeyDown = (event: KeyboardEvent) => {
-    if ((event.metaKey || event.ctrlKey) && event.key === "t")  {
-      
+    if ((event.metaKey || event.ctrlKey) && event.key === "t") {
       toggleWindow("terminal");
     }
   };
@@ -36,7 +35,6 @@ export default function Home() {
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 10000);
-  
 
     // Adding the keydown event listener for Cmd + T
     window.addEventListener("keydown", handleKeyDown);
@@ -50,107 +48,108 @@ export default function Home() {
 
   return (
     <ThemeProvider>
-      {isLoading ? (
-        <ApplePreloader />
-      ) : (
-        <main
-          className="h-screen w-screen overflow-hidden bg-cover bg-center text-black dark:text-white transition-colors duration-300"
-          style={{
-            backgroundImage: `url(${wallpaper.src})`,
-          }}
-        >
-          <MenuBar />
-          <Desktop toggleWindow={toggleWindow} />
-          {openWindows.includes("about") && (
-            <Window
-              id="about"
-              title="About Me"
-              onClose={() => toggleWindow("about")}
-            >
-              <div className="p-4">
-                <h2 className="text-2xl font-bold mb-2">
-                  Ekaspreet Singh Atwal
-                </h2>
-                <p>
-                  I am a web developer passionate about creating beautiful and
-                  functional websites.
-                </p>
-              </div>
-            </Window>
-          )}
-          {openWindows.includes("projects") && (
-            <Window
-              id="projects"
-              title="My Projects"
-              onClose={() => toggleWindow("projects")}
-            >
-              <div className="p-4">
-                <h2 className="text-2xl font-bold mb-2">Projects</h2>
-                <ul className="list-disc list-inside">
-                  <li>Project 1: Portfolio Website</li>
-                  <li>Project 2: E-commerce Platform</li>
-                  <li>Project 3: Weather App</li>
-                </ul>
-              </div>
-            </Window>
-          )}
-          {openWindows.includes("contact") && (
-            <Window
-              id="contact"
-              title="Contact Me"
-              onClose={() => toggleWindow("contact")}
-            >
-              <div className="p-4">
-                <h2 className="text-2xl font-bold mb-2">Contact Information</h2>
-                <p>Email: john.doe@example.com</p>
-                <p>Twitter: @johndoe</p>
-                <p>GitHub: github.com/johndoe</p>
-              </div>
-            </Window>
-          )}
-          {openWindows.includes("vscode") && (
-            <Window
-              id="vscode"
-              title="VS Code"
-              onClose={() => toggleWindow("vscode")}
-            >
-              <VSCodeEditor />
-            </Window>
-          )}
-          {openWindows.includes("browser") && (
-            <DraggableWindow
-              id="social-links"
-              title="My Social Links"
-              onClose={() =>
-                setOpenWindows(openWindows.filter((win) => win !== "browser"))
-              }
-            />
-          )}
-
-          {openWindows.includes("terminal") && (
-            <Window
-              id="terminal"
-              title="Terminal"
-              onClose={() => toggleWindow("terminal")}
-            >
-              <Terminal />
-            </Window>
-          )}
-          {openWindows.includes("music-player") && (
-            <Window
-              id="music-player"
-              title="Terminal"
-              onClose={() => toggleWindow("music-player")}
-            >
-              <MusicPlayer />
-            </Window>
-          )}
-          {openWindows.includes("resume") && (
-            <ResumeWindow onClose={() => toggleWindow("resume")} />
-          )}
-          <Dock toggleWindow={toggleWindow} />
-        </main>
-      )}
+      <div
+        className="min-h-screen min-w-full overflow-hidden bg-cover bg-center text-black dark:text-white transition-colors duration-300"
+        style={{
+          backgroundImage: `url(${wallpaper.src})`,
+        }}
+      >
+        {isLoading ? (
+          <ApplePreloader />
+        ) : (
+          <>
+            <MenuBar />
+            <Desktop toggleWindow={toggleWindow} />
+            {openWindows.includes("about") && (
+              <Window
+                id="about"
+                title="About Me"
+                onClose={() => toggleWindow("about")}
+              >
+                <div className="p-4">
+                  <h2 className="text-2xl font-bold mb-2">
+                    Ekaspreet Singh Atwal
+                  </h2>
+                  <p>
+                    I am a web developer passionate about creating beautiful and
+                    functional websites.
+                  </p>
+                </div>
+              </Window>
+            )}
+            {openWindows.includes("projects") && (
+              <Window
+                id="projects"
+                title="My Projects"
+                onClose={() => toggleWindow("projects")}
+              >
+                <div className="p-4">
+                  <h2 className="text-2xl font-bold mb-2">Projects</h2>
+                  <ul className="list-disc list-inside">
+                    <li>Project 1: Portfolio Website</li>
+                    <li>Project 2: E-commerce Platform</li>
+                    <li>Project 3: Weather App</li>
+                  </ul>
+                </div>
+              </Window>
+            )}
+            {openWindows.includes("contact") && (
+              <Window
+                id="contact"
+                title="Contact Me"
+                onClose={() => toggleWindow("contact")}
+              >
+                <div className="p-4">
+                  <h2 className="text-2xl font-bold mb-2">
+                    Contact Information
+                  </h2>
+                  <p>Email: john.doe@example.com</p>
+                  <p>Twitter: @johndoe</p>
+                  <p>GitHub: github.com/johndoe</p>
+                </div>
+              </Window>
+            )}
+            {openWindows.includes("vscode") && (
+              <Window
+                id="vscode"
+                title="VS Code"
+                onClose={() => toggleWindow("vscode")}
+              >
+                <VSCodeEditor />
+              </Window>
+            )}
+            {openWindows.includes("browser") && (
+              <DraggableWindow
+                id="social-links"
+                title="My Social Links"
+                onClose={() => toggleWindow("browser")}
+              />
+            )}
+            {openWindows.includes("terminal") && (
+              <Window
+                id="terminal"
+                title="Terminal"
+                onClose={() => toggleWindow("terminal")}
+              >
+                <Terminal />
+              </Window>
+            )}
+            {openWindows.includes("music-player") && (
+              <Window
+                id="music-player"
+                title="Music Player"
+                onClose={() => toggleWindow("music-player")}
+              >
+                <MusicPlayer />
+              </Window>
+            )}
+            {openWindows.includes("resume") && (
+              <ResumeWindow onClose={() => toggleWindow("resume")} />
+            )}
+            <Dock toggleWindow={toggleWindow} />
+          </>
+        )}
+      </div>
     </ThemeProvider>
   );
 }
