@@ -8,7 +8,7 @@ import Window from "./components/Window";
 import ApplePreloader from "./components/ApplePreloader";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import VSCodeEditor from "./components/VSCodeEditor";
-import DraggableWindow from "./components/BrowserWindow";
+import GeminiChat from "./components/BrowserWindow";
 import Terminal from "./components/Terminal";
 import ResumeWindow from "./components/ResumeWindow";
 import wallpaper from "@/public/wallpaper-white.jpg";
@@ -124,11 +124,12 @@ export default function Home() {
               </Window>
             )}
             {openWindows.includes("browser") && (
-              <DraggableWindow
-                id="social-links"
-                title="My Social Links"
-                onClose={() => toggleWindow("browser")}
-              />
+              <Window
+              id="browser"
+                title="Contact Me"
+                onClose={() => toggleWindow("browser")}>
+                <GeminiChat />
+              </Window>
             )}
             {openWindows.includes("terminal") && (
               <Window

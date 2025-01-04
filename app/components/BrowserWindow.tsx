@@ -1,241 +1,268 @@
-import React, { useState, useRef, useEffect } from "react";
-import {
-  Github,
-  Linkedin,
-  Twitter,
-  Instagram,
-  Mail,
-  ArrowRight,
-  X,
-  Minus,
-  Square,
-} from "lucide-react";
+import React, { useState, useRef, useEffect } from 'react';
+import { Send, Stars } from 'lucide-react';
+import { useTheme } from "../contexts/ThemeContext";
 
-interface WindowProps {
-  id: string;
-  title: string;
-  onClose: () => void;
+interface Message {
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
 }
 
-const DraggableWindow = ({  title, onClose }: WindowProps) => {
-  const [position, setPosition] = useState({ x: 50, y: 50 });
-  const [size, setSize] = useState({ width: 800, height: 600 });
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [isResizing, setIsResizing] = useState(false);
-  const [isMaximized, setIsMaximized] = useState(false); // Track maximize state
- 
-  const isSmallDevice = window.innerWidth <= 768;
-  const isMediumDevice = window.innerWidth > 768 && window.innerWidth <= 1024;
-  
-  const defaultSize = isSmallDevice
-    ? { width: window.innerWidth * 0.9, height: window.innerHeight * 0.5 }
-    : isMediumDevice
-    ? { width: 600, height: 400 }
-    : { width: 800, height: 600 };
-  
-  const defaultPosition = isSmallDevice
-    ? { x: window.innerWidth * 0.05, y: window.innerHeight * 0.1 }
-    : isMediumDevice
-    ? { x: 30, y: 30 }
-    : { x: 50, y: 50 };
-  
-  const windowRef = useRef<HTMLDivElement>(null);
-  
+interface ThemeContextType {
+  theme: "light" | "dark";
+}
+
+const GeminiChat: React.FC = () => {
+  // ... keep existing state and effects ...
+  const { theme } = useTheme() as ThemeContextType;
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputMessage, setInputMessage] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isDark, setIsDark] = useState<boolean>(true);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    setSize(defaultSize);
-    setPosition(defaultPosition);
-  }, []);
-  const socialLinks = [
-    {
-      icon: <Github className="w-6 h-6" />,
-      label: "GitHub",
-      url: "github.com/ekas-7",
-      color: "hover:text-purple-600 dark:hover:text-purple-400",
-    },
-    {
-      icon: <Linkedin className="w-6 h-6" />,
-      label: "LinkedIn",
-      url: "linkedin.com/in/ekas7",
-      color: "hover:text-blue-600 dark:hover:text-purple-400",
-    },
-    {
-      icon: <Twitter className="w-6 h-6" />,
-      label: "X",
-      url: "twitter.com/Ekas_7",
-      color: "hover:text-sky-500 dark:hover:text-purple-400",
-    },
-    {
-      icon: <Instagram className="w-6 h-6" />,
-      label: "Instagram",
-      url: "instagram.com/ekas_7",
-      color: "hover:text-pink-600 dark:hover:text-purple-400",
-    },
-    {
-      icon: <Mail className="w-6 h-6" />,
-      label: "Email",
-      url: "mailto:ekasatwal.work@gmail.com",
-      color: "hover:text-red-500 dark:hover:text-purple-400",
-    },
-  ];
+    setIsDark(theme === "dark");
+  }, [theme]);
+
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      
-      if (isMaximized) {
-        setIsMaximized(false);
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  // ... keep existing fetchGeminiResponse ...
+  const fetchGeminiResponse = async (userMessage: string): Promise<string> => {
+    const API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+    if (!API_KEY) {
+      throw new Error('Gemini API key not found');
+    }
+
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{
+                text: userMessage
+              }]
+            }]
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || 'Failed to get response from Gemini');
       }
-    }, 1000);
 
-    return () => clearTimeout(timeout);
-  }, [ isMaximized]);
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (isDragging) {
-        setPosition({
-          x: e.clientX - dragOffset.x,
-          y: e.clientY - dragOffset.y,
-        });
-      }
-      if (isResizing && windowRef.current) {
-        const newWidth = Math.max(300, e.clientX - position.x);
-        const newHeight = Math.max(200, e.clientY - position.y);
-        setSize({ width: newWidth, height: newHeight });
-      }
-    };
-
-    const handleMouseUp = () => {
-      setIsDragging(false);
-      setIsResizing(false);
-    };
-
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
-
-    return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, [isDragging, isResizing, dragOffset, position]);
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (windowRef.current) {
-      const rect = windowRef.current.getBoundingClientRect();
-      setDragOffset({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      });
-      setIsDragging(true);
+      const data = await response.json();
+      return data.candidates[0].content.parts[0].text;
+    } catch (error) {
+      console.error('Error calling Gemini API:', error);
+      throw error;
     }
   };
 
-  const handleResizeMouseDown = (e: React.MouseEvent) => {
-    setIsResizing(true);
-    e.stopPropagation();
+  // ... keep existing handleSubmit ...
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
+    e.preventDefault();
+    const trimmedMessage = inputMessage.trim();
+    if (!trimmedMessage || isLoading) return;
+
+    setInputMessage('');
+    setIsLoading(true);
+
+    const userMessage: Message = {
+      role: 'user',
+      content: trimmedMessage,
+      timestamp: new Date()
+    };
+    setMessages(prev => [...prev, userMessage]);
+
+    try {
+      const response = await fetchGeminiResponse(trimmedMessage);
+      console.log(response);
+      const assistantMessage: Message = {
+        role: 'assistant',
+        content: response,
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, assistantMessage]);
+    } catch (error) {
+      const errorMessage: Message = {
+        role: 'assistant',
+        content: "I apologize, but I'm having trouble responding right now. Please try again later.",
+        timestamp: new Date()
+      };
+      console.log(error);
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleMaximize = () => {
-    if (windowRef.current) {
-      setPosition({ x: 5, y: 35 })
-      setSize({ width: window.innerWidth-10, height: window.innerHeight - 40 })
-      setIsMaximized(true)
-    }
-  }
-
-  const handleMinimize = () => {
-    if (windowRef.current) {
-      setPosition({ x: 50, y: 50 });
-      setSize({ width: 800, height: 600 });
-      setIsMaximized(false);
-    }
-  };
-
-  return (
-    <div
-      ref={windowRef}
-      className="absolute bg-white/25 dark:bg-black/25 backdrop-blur-xl rounded-xl shadow-2xl overflow-hidden border border-white/20 dark:border-white/10 transition-all duration-300"
-      style={{
-        left: `${position.x}px`,
-        top: `${position.y}px`,
-        width: `${size.width}px`,
-        height: `${size.height}px`,
-      }}
-    >
-      <div
-        className="bg-gray-100/80 dark:bg-gray-800/80 h-8 flex items-center justify-between px-3 cursor-move backdrop-blur-sm border-b border-white/10"
-        onMouseDown={handleMouseDown}
-      >
-        <div className="flex items-center space-x-2">
-          <button
-            className="w-3 h-3 rounded-full bg-red-500 flex items-center justify-center"
-            onClick={onClose}
-          >
-            <X className="w-4 h-4 p-0.5 text-white dark:text-black" />
-          </button>
-
-          <button className="w-3 h-3 rounded-full bg-yellow-500 flex items-center justify-center"
-            onClick={handleMinimize}
-          >
-            <Minus className="w-4 h-4 p-0.5 text-white dark:text-black" />
-          </button>
-
-          <button
-            className="w-3 h-3 rounded-full bg-green-500 flex items-center justify-center"
-            onClick={handleMaximize}
-          >
-            <Square className="w-4 h-4 p-0.5 text-white dark:text-black" />
-          </button>
-        </div>
-
-        <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
-          {title}
-        </span>
-        <div className="w-16" />
-      </div>
-
-      <div
-        className="bg-white/50 dark:bg-black/50 backdrop-blur-md p-6 overflow-auto"
-        style={{ height: `calc(100% - 2rem)` }}
-      >
-        <div className="max-w-2xl mx-auto">
-          <h1 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">
-            Connect With Me
-          </h1>
-
-          <div className="grid gap-4">
-            {socialLinks.map((link, index) => (
-              <a
-                key={index}
-                href={`https://${link.url}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 
-                  transition-all duration-300 hover:shadow-lg ${link.color}
-                  bg-white/80 dark:bg-gray-700/80 group`}
-              >
-                <div className="p-2 rounded-full bg-gray-100 dark:bg-gray-600 group-hover:scale-110 transition-transform">
-                  {link.icon}
-                </div>
-                <div className="ml-4">
-                  <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
-                    {link.label}
-                  </h2>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">
-                    {link.url}
-                  </p>
-                </div>
-                <ArrowRight className="w-5 h-5 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
-              </a>
+  const FormattedContent: React.FC<{ content: string }> = ({ content }) => {
+    const formatContent = (text: string) => {
+      return text.split('\n\n').map((section, sectionIndex) => {
+        const lines = section.split('\n');
+        const isBold = lines[0].startsWith('**');
+        
+        return (
+          <div key={sectionIndex} className="mb-4">
+            {isBold ? (
+              <div className="font-semibold mb-2">
+                {lines[0].replace(/\*\*/g, '')}
+              </div>
+            ) : (
+              <div>{lines[0]}</div>
+            )}
+            {lines.slice(1).map((line, lineIndex) => (
+              <div key={lineIndex} className="ml-4 flex items-start">
+                {line.startsWith('*') && (
+                  <>
+                    <span className="mr-2">•</span>
+                    <span>{line.replace('* ', '')}</span>
+                  </>
+                )}
+              </div>
             ))}
+          </div>
+        );
+      });
+    };
+
+    return <div className="space-y-2">{formatContent(content)}</div>;
+  };
+
+  const MessageBubble: React.FC<{ message: Message }> = ({ message }) => (
+    <div
+  className={`max-w-3xl mx-auto w-full ${
+    message.role === 'user'
+      ? isDark
+        ? 'bg-gray-700' // Dark background for user
+        : 'bg-gray-100' // Light background for user
+      : isDark
+      ? 'bg-gray-800' // Dark background for others
+      : 'bg-white' // Light background for others
+  } p-6 rounded-lg`}
+  
+>
+
+
+      <div className="flex gap-4">
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+          message.role === 'user' 
+            ? 'bg-blue-600' 
+            : isDark ? 'bg-purple-900' : 'bg-purple-100'
+        }`}>
+          {message.role === 'user' ? (
+            <span className="text-white font-medium">U</span>
+          ) : (
+            <Stars className={`w-5 h-5 ${isDark ? 'text-purple-400' : 'text-purple-600'}`} />
+          )}
+        </div>
+        <div className="flex-1">
+          <div className={`font-medium mb-1 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+            {message.role === 'user' ? 'You' : 'Gemini'}
+          </div>
+          <div className={`${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+            {message.role === 'assistant' ? (
+              <FormattedContent content={message.content} />
+            ) : (
+              <div className="whitespace-pre-wrap">{message.content}</div>
+            )}
           </div>
         </div>
       </div>
+    </div>
+  );
 
-      <div
-        className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize bg-transparent"
-        onMouseDown={handleResizeMouseDown}
-      />
+  // ... keep existing return statement ...
+  return (
+    <div className={`w-full h-full flex flex-col `}>
+      <div className="flex-1 overflow-y-auto p-4 space-y-6">
+        {messages.length === 0 && (
+          <div className="h-full flex items-center justify-center">
+            <div className="text-center space-y-6">
+              <Stars className={`w-12 h-12 ${isDark ? 'text-blue-400' : 'text-blue-600'} mx-auto`} />
+              <h2 className={`text-3xl font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                How can I help you today?
+              </h2>
+            </div>
+          </div>
+        )}
+
+        {messages.map((message, index) => (
+          <MessageBubble key={index} message={message} />
+        ))}
+        
+        {isLoading && (
+          <div className="max-w-3xl mx-auto w-full p-6">
+            <div className="flex gap-4">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                isDark ? 'bg-purple-900' : 'bg-purple-100'
+              }`}>
+                <Stars className={`w-5 h-5 ${isDark ? 'text-purple-400' : 'text-purple-600'}`} />
+              </div>
+              <div className="flex-1">
+                <div className={`font-medium mb-1 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                  Gemini
+                </div>
+                <div className="flex gap-2">
+                  {[0, 1, 2].map((i) => (
+                    <div 
+                      key={i}
+                      className={`w-2 h-2 ${isDark ? 'bg-gray-600' : 'bg-gray-400'} rounded-full animate-bounce`}
+                      style={{ animationDelay: `${i * 0.2}s` }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div ref={messagesEndRef} />
+      </div>
+
+      <div className={`border-t ${isDark ? 'border-gray-700' : 'border-gray-200'} p-4`}>
+        <div className="max-w-3xl mx-auto">
+          <form onSubmit={handleSubmit} className="relative">
+            <input
+              type="text"
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              placeholder="Message Gemini..."
+              className={`w-full p-4 pr-32 border rounded-2xl focus:outline-none focus:ring-1 ${
+                isDark 
+                  ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500' 
+                  : 'bg-white border-gray-200 text-gray-900 focus:border-blue-500 focus:ring-blue-500'
+              }`}
+              disabled={isLoading}
+            />
+            <div className="absolute right-2 top-2">
+              <button
+                type="submit"
+                disabled={isLoading || !inputMessage.trim()}
+                className={`p-2 rounded-full ${
+                  isDark ? 'text-blue-400 hover:bg-gray-700' : 'text-blue-600 hover:bg-blue-50'
+                } disabled:opacity-50 disabled:cursor-not-allowed`}
+              >
+                <Send className="w-5 h-5" />
+              </button>
+            </div>
+          </form>
+          <div className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'} mt-2 text-center`}>
+            Gemini may display inaccurate info, including about people, places, or facts.
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default DraggableWindow;
+export default GeminiChat;
