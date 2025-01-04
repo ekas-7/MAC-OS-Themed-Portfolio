@@ -36,9 +36,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ switchWallpaper }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [isWallpaperSelectorOpen, setIsWallpaperSelectorOpen] = useState(false);
 
-  const handleOpenWallpaperSelector = (): void => {
-    setIsWallpaperSelectorOpen(true);
-  };
+  
 
   const handleCloseWallpaperSelector = (): void => {
     setIsWallpaperSelectorOpen(false);
@@ -102,7 +100,10 @@ const MenuBar: React.FC<MenuBarProps> = ({ switchWallpaper }) => {
       drawerRef.current.style.transform = 'translateY(-100%)';
     }
   };
-
+  const handleOpenWallpaperSelector = (): void => {
+    handleDrawerClose();
+    setIsWallpaperSelectorOpen(true);
+  };
   const handleCalendarClick = (): void => {
     setIsCalendarOpen(!isCalendarOpen);
   };
@@ -275,7 +276,15 @@ const MenuBar: React.FC<MenuBarProps> = ({ switchWallpaper }) => {
                 </>
               )}
             </button>
-
+            
+            
+          <div className="flex items-center space-x-2 p-2"  onClick={handleOpenWallpaperSelector } >
+          <Settings
+           // Open the wallpaper selector when clicked
+            className="h-6 w-6"
+          />
+              <span>Change Background</span>
+            </div>
             <div className="flex items-center space-x-2 p-2">
               {renderBatteryIcon()}
               <span>Battery: {batteryLevel}%</span>
