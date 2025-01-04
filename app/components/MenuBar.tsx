@@ -142,9 +142,9 @@ const MenuBar: React.FC = () => {
         onTouchEnd={handleTouchEnd}
       >
         <div className="flex items-center space-x-2">
-          <span className="hidden sm:block">Ekaspreet Singh Atwal</span>
-          <LucideCopyright className="sm:h-4 h-6 sm:w-4 w-6 font-thin hidden sm:block"/>
-          <span className="hidden sm:block">2025</span>
+          <span className="hidden sm:block text-sm">Ekaspreet Singh Atwal</span>
+          <LucideCopyright className="sm:h-4 h-5 sm:w-4 w-5 font-thin hidden sm:block"/>
+          <span className="hidden sm:block text-sm ">2025</span>
         </div>
         
         <div className="flex items-center space-x-4 sm:space-x-2">
