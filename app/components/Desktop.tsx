@@ -29,7 +29,7 @@ export default function Desktop({ toggleWindow }: DesktopProps) {
   ]
 
   return (
-    <div className="absolute right-0 top-8 p-4 flex flex-col gap-8">
+    <div className="absolute right-0 top-8 p-4 sm:flex flex-col gap-8  hidden">
       {icons.map(({ id, label, icon }) => (
         <button
           key={id}

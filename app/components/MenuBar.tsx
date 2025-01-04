@@ -118,7 +118,7 @@ export default function MenuBar() {
           <button
             onClick={handleCalendarClick}
             aria-label="Toggle calendar"
-            className={`text-xl sm:text-sm ${
+            className={`text-md sm:text-sm ${
               theme === "light" ? "text-black" : "text-white"
             }`}
           >
@@ -129,16 +129,18 @@ export default function MenuBar() {
             })}  
           </button>
           {isCalendarOpen && (
-            <div className="absolute top-7 right-0 z-10">
-              <Calendar /> 
-            </div>
+           <div className="absolute top-8 left-[0%] transform -translate-x-1/2 z-10">
+           <Calendar /> 
+         </div>
+         
+          
           )}
         </div>
 
         <div className="relative">
           <button
             aria-label="Display time"
-            className={`sm:text-sm text-xl ${
+            className={`sm:text-sm text-md ${
               theme === "light" ? "text-black" : "text-white"
             }`}
           >
