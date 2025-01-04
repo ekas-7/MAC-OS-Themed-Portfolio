@@ -127,12 +127,13 @@ export default function Window({ children, onClose }: WindowProps) {
   return (
     <div
       ref={windowRef}
-      className="absolute bg-white/25 dark:bg-black/25 backdrop-blur-xl rounded-xl shadow-2xl overflow-hidden border border-white/20 dark:border-white/10 transition-all duration-300"
+      className="absolute bg-white/25 dark:bg-black/25 backdrop-blur-xl rounded-xl shadow-2xl overflow-hidden border border-white/20 dark:border-white/10 transition-all duration-300 "
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
         width: `${size.width}px`,
         height: `${size.height}px`,
+      
         transition:
           isMaximized || isMinimized
             ? "width 0.3s ease, height 0.3s ease"

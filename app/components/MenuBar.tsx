@@ -136,7 +136,7 @@ const MenuBar: React.FC = () => {
           theme === "light"
             ? "bg-gradient-to-br from-white/70 to-gray-100/70 text-black"
             : "bg-gradient-to-br from-gray-900/70 to-gray-800/70 text-white"
-        } backdrop-blur-xl flex items-center sm:justify-between px-4 z-50 transition-colors duration-300 justify-evenly`}
+        } backdrop-blur-xl flex items-center sm:justify-between px-4 z-5 transition-colors duration-300 justify-evenly`}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
