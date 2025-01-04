@@ -186,7 +186,7 @@ const MenuBar: React.FC = () => {
               {formatDate(dateTime)}
             </button>
             {isCalendarOpen && (
-              <div className="absolute top-8 left-[0%] transform -translate-x-1/2 z-10">
+              <div className="absolute top-8 left-[0%] transform -translate-x-1/2 z-10 sm:block hidden">
                 <Calendar />
               </div>
             )}

@@ -33,7 +33,7 @@ const OSBootPreloader = () => {
     setIsClient(true);
 
     const runBootSequence = async () => {
-      for (let step of bootSequence) {
+      for (const step of bootSequence) {
         await new Promise(resolve => setTimeout(resolve, step.delay));
         addBootStep(step.text);
       }
