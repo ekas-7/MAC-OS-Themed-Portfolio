@@ -35,7 +35,7 @@ export default function Home() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
+    }, 10000);
   
 
     // Adding the keydown event listener for Cmd + T
