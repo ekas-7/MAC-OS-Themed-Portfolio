@@ -11,7 +11,11 @@ import VSCodeEditor from "./components/VSCodeEditor";
 import GeminiChat from "./components/BrowserWindow";
 import Terminal from "./components/Terminal";
 import ResumeWindow from "./components/ResumeWindow";
-import wallpaper from "@/public/wallpaper-white.jpg";
+import wallpaper3 from "@/public/wallpaper-white.jpg";
+import wallpaper2 from "@/public/wallpaper2.jpg";
+import wallpaper from "@/public/wallpaper3.jpg";
+import wallpaper4 from "@/public/wallpaper4.jpg";
+import wallpaper5 from "@/public/wallpaper5.jpg";
 import MusicPlayer from "./components/MusicPlayer";
 import ProfileCard from "./components/AboutMe";
 import ConnectWithMe from "./components/Social";
@@ -21,6 +25,20 @@ import Projects from "./components/Project";
 export default function Home() {
   const [openWindows, setOpenWindows] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [wallpaper1, setWallpaper] = useState(wallpaper); // Default wallpaper
+
+  // Array of wallpapers
+  const wallpapers = [wallpaper, wallpaper2,wallpaper3,wallpaper4,wallpaper5];
+
+  // Function to toggle between wallpapers
+  const switchWallpaper = (wallpaperSrc: string) => {
+    
+    const selectedWallpaper = wallpapers.find((wallpaper) => wallpaper.src === wallpaperSrc);
+    if (selectedWallpaper) {
+      setWallpaper(selectedWallpaper); // Assuming setWallpaper is a state setter for the current wallpaper
+    }
+  };
+  
 
   const toggleWindow = (id: string) => {
     setOpenWindows((prev) =>
@@ -55,14 +73,14 @@ export default function Home() {
       <div
         className="min-h-screen min-w-full overflow-hidden bg-cover bg-center text-black dark:text-white transition-colors duration-300"
         style={{
-          backgroundImage: `url(${wallpaper.src})`,
+          backgroundImage: `url(${wallpaper1.src})`,
         }}
       >
         {isLoading ? (
           <ApplePreloader />
         ) : (
           <>
-            <MenuBar />
+            <MenuBar switchWallpaper={switchWallpaper} />
             <Desktop toggleWindow={toggleWindow} />
             {openWindows.includes("about") && (
               <Window
@@ -70,7 +88,7 @@ export default function Home() {
                 title="About Me"
                 onClose={() => toggleWindow("about")}
               >
-                <ProfileCard/>
+                <ProfileCard />
               </Window>
             )}
             {openWindows.includes("projects") && (
@@ -88,9 +106,7 @@ export default function Home() {
                 title="Contact Me"
                 onClose={() => toggleWindow("contact")}
               >
-                
-                 <ConnectWithMe />
-               
+                <ConnectWithMe />
               </Window>
             )}
             {openWindows.includes("vscode") && (
@@ -104,9 +120,10 @@ export default function Home() {
             )}
             {openWindows.includes("browser") && (
               <Window
-              id="browser"
+                id="browser"
                 title="Contact Me"
-                onClose={() => toggleWindow("browser")}>
+                onClose={() => toggleWindow("browser")}
+              >
                 <GeminiChat />
               </Window>
             )}
@@ -132,6 +149,8 @@ export default function Home() {
               <ResumeWindow onClose={() => toggleWindow("resume")} />
             )}
             <Dock toggleWindow={toggleWindow} />
+            {/* Button to switch wallpaper */}
+            
           </>
         )}
       </div>

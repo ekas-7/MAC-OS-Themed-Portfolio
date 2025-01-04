@@ -16,14 +16,17 @@ import {
 } from "lucide-react"; // Import close icon
 import { useTheme } from "../contexts/ThemeContext";
 import Calendar from "./Calendar";
+import WallpaperSelector from "./WallpaperSel";
 
 interface ThemeContextType {
   theme: "light" | "dark";
   toggleTheme: () => void;
 }
+interface MenuBarProps {
+  switchWallpaper: (wallpaperSrc: string) => void; // Define the prop type
+}
 
-
-const MenuBar: React.FC = () => {
+const MenuBar: React.FC<MenuBarProps> = ({ switchWallpaper }) => {
   const { theme, toggleTheme } = useTheme() as ThemeContextType;
   const [dateTime, setDateTime] = useState<Date>(new Date());
   const [batteryLevel, setBatteryLevel] = useState<number>(100);
@@ -31,7 +34,21 @@ const MenuBar: React.FC = () => {
   const [isCalendarOpen, setIsCalendarOpen] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [isWallpaperSelectorOpen, setIsWallpaperSelectorOpen] = useState(false);
 
+  const handleOpenWallpaperSelector = (): void => {
+    setIsWallpaperSelectorOpen(true);
+  };
+
+  const handleCloseWallpaperSelector = (): void => {
+    setIsWallpaperSelectorOpen(false);
+  };
+
+  const handleSelectWallpaper = (wallpaper: string): void => {
+    // Call the passed switchWallpaper function to change the wallpaper
+    switchWallpaper(wallpaper);
+    setIsWallpaperSelectorOpen(false); // Close the wallpaper selector after selection
+  };
   const drawerRef = useRef<HTMLDivElement>(null);
   const startY = useRef<number>(0);
   const currentY = useRef<number>(0);
@@ -161,7 +178,10 @@ const MenuBar: React.FC = () => {
             )}
           </button>
           
-          <Settings className="sm:w-4 w-6 sm:h-4 h-6 hover:scale-110 transition-transform" />
+          <Settings
+            onClick={handleOpenWallpaperSelector} // Open the wallpaper selector when clicked
+            className="sm:w-4 w-6 sm:h-4 h-6 hover:scale-110 transition-transform"
+          />
           
           <div className="relative group">
             {renderBatteryIcon()}
@@ -272,6 +292,12 @@ const MenuBar: React.FC = () => {
           </div>
         </div>
       </div>
+      {isWallpaperSelectorOpen && (
+        <WallpaperSelector
+          onSelectWallpaper={handleSelectWallpaper}
+          closeWindow={handleCloseWallpaperSelector}
+        />
+      )}
     </>
   );
 };
