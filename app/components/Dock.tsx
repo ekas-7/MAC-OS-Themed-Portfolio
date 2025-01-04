@@ -51,8 +51,8 @@ export default function Dock({ toggleWindow }: DockProps) {
   
 
   return (
-    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-auto ">
-      <div className="flex items-center gap-2  sm:gap-3 px-4 py-2 
+    <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 sm:w-auto max-w-[98%] ">
+      <div className="flex items-center gap-1.5  sm:gap-3 px-4 py-2 
         bg-gradient-to-br from-white/70 to-gray-100/70 
         dark:from-gray-900/70 dark:to-gray-800/70 
         backdrop-blur-xl rounded-xl shadow-2xl 
