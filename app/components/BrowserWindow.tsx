@@ -24,8 +24,20 @@ const DraggableWindow = ({  title, onClose }: WindowProps) => {
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isResizing, setIsResizing] = useState(false);
   const [isMaximized, setIsMaximized] = useState(false); // Track maximize state
+ 
+  const isSmallDevice = typeof window !== "undefined" && window.innerWidth <= 768;
+  const defaultSize = isSmallDevice
+    ? { width: window.innerWidth * 0.9, height: window.innerHeight * 0.5 }
+    : { width: 800, height: 600 };
+  const defaultPosition = isSmallDevice
+    ? { x: window.innerWidth * 0.05, y: window.innerHeight * 0.1 }
+    : { x: 50, y: 50 };
   const windowRef = useRef<HTMLDivElement>(null);
 
+  useEffect (()=>{
+    setSize(defaultSize);
+    setPosition(defaultPosition);
+  },[])
   const socialLinks = [
     {
       icon: <Github className="w-6 h-6" />,
