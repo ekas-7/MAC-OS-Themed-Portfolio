@@ -52,6 +52,7 @@ const Projects: React.FC = () => {
         setTimeout(() => setAdditionalProjects(fetchedProjects), 1000); // Simulated delay
       } catch (err) {
         setError('Failed to fetch additional projects');
+        console.log(err);
       } finally {
         setIsLoading(false);
       }
