@@ -11,22 +11,34 @@ interface Project {
 
 const initialProjects: Project[] = [
   {
-    title: "Project 1",
-    description: "A brief description of Project 1 and its key features.",
-    deployedUrl: "https://project1.example.com",
-    githubUrl: "https://github.com/username/project1",
+    title: "Blog It",
+    description: "This is a blogging application inspired by Medium. The project is built from scratch using a modern tech stack and deployed on Vercel and Cloudflare Workers.",
+    deployedUrl: "https://blog-7ytpfq9wi-ekasatwal7.vercel.app/",
+    githubUrl: "https://github.com/ekas-7/Blog-It",
   },
   {
-    title: "Project 2",
-    description: "An overview of Project 2 highlighting its main functionalities.",
-    deployedUrl: "https://project2.example.com",
-    githubUrl: "https://github.com/username/project2",
+    title: "Aurea",
+    description: "Access to quality healthcare is a widespread issue. While urban areas have better facilities, people in small towns often lack access to specialists, leaving skin conditions undiagnosed or improperly treated, which can lead to a dip in self-worth and potential health risks.",
+    deployedUrl: "https://noobz-1.onrender.com/",
+    githubUrl: "https://github.com/ekas-7/Aurea",
   },
   {
-    title: "Project 3",
-    description: "A summary of Project 3 and what makes it unique.",
-    deployedUrl: "https://project3.example.com",
-    githubUrl: "https://github.com/username/project3",
+    title: "Chat-App",
+    description: "Chat-App is a real-time messaging application that allows users to communicate instantly with each other. It provides a platform for seamless text-based conversations in a user-friendly interface.",
+    deployedUrl: "https://github.com/ekas-7/Chat-App",
+    githubUrl: "https://github.com/ekas-7/Chat-App",
+  },
+  {
+    title: "npx-ekas",
+    description: "npx-ekas is a simple, yet powerful, personal CLI card built using Node.js. It serves as a digital business card that you can share quickly via the npx command.",
+    deployedUrl: "https://www.npmjs.com/package/ekas",
+    githubUrl: "https://github.com/ekas-7/npx-ekas",
+  },
+  {
+    title: "Drishti",
+    description: "Drishti is a software developed for a global psychological services startup to administer RIASEC and DISC tests",
+    deployedUrl: "https://drishti-dnro.vercel.app/",
+    githubUrl: "https://github.com/ekas-7/Drishti",
   },
 ];
 
