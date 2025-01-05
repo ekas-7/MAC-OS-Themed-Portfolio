@@ -41,19 +41,53 @@ const Terminal: React.FC = () => {
       } else {
         switch (command) {
           case 'help':
-            response = 'Available commands: about, skills, projects, contact, game, clear, toggleTheme'
+            response = 'Available commands: about, skills,  contact, game, clear, toggleTheme'
             break
           case 'about':
-            response = "I'm a passionate web developer with a love for creating intuitive and efficient applications."
+            response = `Prefinal year Information Technology student at Dr. B. R. Ambedkar
+          National Institute of Technology, Jalandhar.
+          Passionate about software development with experience in building
+          scalable web applications.`
             break
-          case 'skills':
-            response = 'My skills include: JavaScript, React, Node.js, TypeScript, and more.'
-            break
-          case 'projects':
-            response = 'Some of my projects: 1. Portfolio Website, 2. E-commerce Platform, 3. Weather App'
-            break
+            case 'skills':
+              response = `
+                    
+                      → C,
+                      → C++,
+                      → JavaScript,
+                      → TypeScript,
+                      → Java,
+                      → Python,
+                  
+                      → Node.js,
+                      → Express.js,
+                      → HonoJS,
+                      → React.js,
+                      → Next.js,
+                      → Recoil,
+                      → WebSockets,
+                      → Zod,
+                      → TailwindCSS,
+                
+                  
+                      → Git/GitHub,
+                      → Figma,
+                      → Google Colab,
+                      → Docker,
+                      → AWS,
+                    
+                 
+                      → MySQL,
+                      → PostgreSQL,
+                      → MongoDB,
+                      → Prisma ORM,
+                 
+                  
+                    `;
+              break;
+            
           case 'contact':
-            response = 'Email: john.doe@example.com | GitHub: github.com/johndoe | Twitter: @johndoe'
+            response = 'Email: ekasatwal.work@gmail.com | GitHub: github.com/ekas-7 | Twitter: @Ekas_7'
             break
           case 'game':
             if (!gameStarted) {
