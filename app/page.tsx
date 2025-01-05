@@ -16,6 +16,10 @@ import wallpaper2 from "@/public/wallpaper2.jpg";
 import wallpaper from "@/public/wallpaper3.jpg";
 import wallpaper4 from "@/public/wallpaper4.jpg";
 import wallpaper5 from "@/public/wallpaper5.jpg";
+import wallpaper7 from "@/public/wallpaper7.jpg";
+import wallpaper8 from "@/public/wallpaper8.jpg";
+import wallpaper9 from "@/public/wallpaper9.jpg";
+import wallpaper10 from "@/public/wallpaper10.jpg";
 import MusicPlayer from "./components/MusicPlayer";
 import ProfileCard from "./components/AboutMe";
 import ConnectWithMe from "./components/Social";
@@ -28,7 +32,7 @@ export default function Home() {
   const [wallpaper1, setWallpaper] = useState(wallpaper); // Default wallpaper
 
   // Array of wallpapers
-  const wallpapers = [wallpaper, wallpaper2,wallpaper3,wallpaper4,wallpaper5];
+  const wallpapers = [wallpaper, wallpaper2,wallpaper3,wallpaper4,wallpaper5,wallpaper7,wallpaper8,wallpaper9,wallpaper10];
 
   // Function to toggle between wallpapers
   const switchWallpaper = (wallpaperSrc: string) => {
