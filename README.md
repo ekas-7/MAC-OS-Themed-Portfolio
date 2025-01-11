@@ -1,37 +1,130 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# macOS Themed Portfolio Website
 
-## Getting Started
+A modern, sleek portfolio website built with Next.js, featuring a macOS-inspired design aesthetic and an IBM-style preloader animation. This project combines the power of modern web technologies with the iconic visual language of macOS to create an engaging and intuitive user experience.
 
-First, run the development server:
 
+## ✨ Features
+
+- **macOS Design Language**
+  - Window-style components with familiar controls
+  - System-inspired typography and spacing
+  - Dock-like navigation
+  - Native-feeling animations and transitions
+
+- **Technical Highlights**
+  - Built with Next.js for optimal performance
+  - IBM-inspired preloader animation
+  - Fully responsive design
+  - Dynamic theme switching
+  - Smooth page transitions
+  - SEO optimized
+
+## 🚀 Live Demo
+
+Visit the live website: [https://www.ekas.site/]
+
+## 🛠️ Technologies Used
+
+- Next.js
+- React
+- Tailwind CSS
+- Framer Motion
+- TypeScript
+
+## 📦 Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/ekas-7/MAC-OS-Themed-Portfolio.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Navigate to the project directory:
+```bash
+cd MAC-OS-Themed-Portfolio
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Install dependencies:
+```bash
+npm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Start the development server:
+```bash
+npm run dev
+```
 
-## Learn More
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-To learn more about Next.js, take a look at the following resources:
+## 🔧 Configuration
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Update `config/profile.js` with your personal information:
+```javascript
+module.exports = {
+  name: "Your Name",
+  role: "Your Role",
+  contact: "your.email@example.com",
+  // Add other configuration options
+}
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. Replace project images in the `public/projects` directory
+3. Update content in `data/` directory
 
-## Deploy on Vercel
+## 📱 Responsive Design
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The portfolio is optimized for various screen sizes:
+- Desktop (1024px and above)
+- Tablet (768px to 1023px)
+- Mobile (below 768px)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# portfolio-final
+## 🎨 Customization
+
+### Theme Colors
+Modify the theme colors in `tailwind.config.js`:
+```javascript
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        primary: '#your-color',
+        secondary: '#your-color',
+        // Add custom colors
+      }
+    }
+  }
+}
+```
+
+### Layout
+Adjust the layout components in `components/layout/`
+
+## 📜 License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📞 Contact
+
+Your Name - [@your_twitter](https://x.com/Ekas_7)
+
+Project Link: [https://github.com/ekas-7/MAC-OS-Themed-Portfolio](https://github.com/ekas-7/MAC-OS-Themed-Portfolio)
+
+## 🙏 Acknowledgments
+
+- macOS design inspiration from Apple
+- IBM for the preloader animation concept
+- Next.js team for the amazing framework
+- All contributors who helped enhance this project
+
+---
+
+Made with ❤️ by EKaspreeet Singh Atwal
