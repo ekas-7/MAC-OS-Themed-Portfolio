@@ -57,20 +57,7 @@ npm run dev
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## 🔧 Configuration
 
-1. Update `config/profile.js` with your personal information:
-```javascript
-module.exports = {
-  name: "Your Name",
-  role: "Your Role",
-  contact: "your.email@example.com",
-  // Add other configuration options
-}
-```
-
-2. Replace project images in the `public/projects` directory
-3. Update content in `data/` directory
 
 ## 📱 Responsive Design
 
