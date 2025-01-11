@@ -116,7 +116,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📞 Contact
 
-Your Name - [@your_twitter](https://x.com/Ekas_7)
+Connect with me on X- [@Ekas_7](https://x.com/Ekas_7)
 
 Project Link: [https://github.com/ekas-7/MAC-OS-Themed-Portfolio](https://github.com/ekas-7/MAC-OS-Themed-Portfolio)
 
