@@ -24,6 +24,7 @@ import MusicPlayer from "./components/MusicPlayer";
 import ProfileCard from "./components/AboutMe";
 import ConnectWithMe from "./components/Social";
 import Projects from "./components/Project";
+import PacManGame from "./components/PacManGame";
 
 
 export default function Home() {
@@ -151,6 +152,15 @@ export default function Home() {
             )}
             {openWindows.includes("resume") && (
               <ResumeWindow onClose={() => toggleWindow("resume")} />
+            )}
+            {openWindows.includes("pacman-game") && (
+              <Window
+                id="pacman-game"
+                title="Pac-Man Game"
+                onClose={() => toggleWindow("pacman-game")}
+              >
+                <PacManGame />
+              </Window>
             )}
             <Dock toggleWindow={toggleWindow} />
             {/* Button to switch wallpaper */}

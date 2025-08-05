@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Github, ExternalLink, Play, Image } from 'lucide-react';
+import Image from 'next/image';
+import { Github, ExternalLink, Play, Image as ImageIcon } from 'lucide-react';
 import GitHubProjects from './OtherProject';
 
 interface Project {
@@ -105,14 +106,16 @@ const Projects: React.FC = () => {
           <div className="xl:w-1/2 w-full relative bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-700 dark:to-gray-800">
             <div className="aspect-video relative overflow-hidden">
               {project.imageUrl ? (
-                <img
+                <Image
                   src={project.imageUrl}
                   alt={`${project.title} preview`}
+                  width={800}
+                  height={450}
                   className="w-full h-full object-cover"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100 dark:from-gray-600 dark:to-gray-700">
-                  <Image className="w-16 h-16 text-gray-400" />
+                  <ImageIcon className="w-16 h-16 text-gray-400" />
                 </div>
               )}
               

@@ -88,7 +88,7 @@ const ProfileCard = () => {
               <ul className="space-y-1 text-sm">
                 <li>Led 5+ workshops</li>
                 <li>Mentored 30+ students in web development</li>
-                <li>Built NITJ's official web app</li>
+                <li>Built NITJ&apos;s official web app</li>
               </ul>
             </div>
           </div>

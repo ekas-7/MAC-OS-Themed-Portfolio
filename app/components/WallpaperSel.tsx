@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import Image from 'next/image';
 import wallpaper1 from "@/public/wallpaper-white.jpg";
 import wallpaper2 from "@/public/wallpaper2.jpg";
 import wallpaper3 from "@/public/wallpaper3.jpg";
@@ -50,9 +51,11 @@ const WallpaperItem: React.FC<WallpaperItemProps> = React.memo(({ src, alt, isLo
       className="relative cursor-pointer rounded-lg overflow-hidden shadow-md aspect-video focus-within:ring-2 focus-within:ring-blue-500"
       onClick={onSelect}
     >
-      <img
+      <Image
         src={src}
         alt={alt}
+        width={400}
+        height={225}
         className={`w-full h-full object-cover rounded-lg transition-all duration-300 transform hover:scale-105 ${
           isLoading ? 'opacity-0' : 'opacity-100'
         }`}

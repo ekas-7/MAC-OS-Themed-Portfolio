@@ -2,6 +2,7 @@
 
 /* Previous imports and interface declarations remain the same */
 import React, { useState, useRef, useEffect } from 'react'
+import Image from 'next/image'
 import { Play, Pause, SkipBack, SkipForward, Volume2, Volume1, VolumeX, Heart, Repeat, Shuffle, Minimize2 } from 'lucide-react'
 
 interface Song {
@@ -104,7 +105,7 @@ export default function FullScreenMusicPlayer() {
         audioRef.current.play()
       }
     }
-  }, [currentSong])
+  }, [currentSong, isPlaying])
 
   // Calculate current time safely
   const currentTime = audioRef.current ? audioRef.current.currentTime : 0
@@ -116,10 +117,12 @@ export default function FullScreenMusicPlayer() {
         {/* Previous sections remain the same */}
         {/* Album Art */}
         <div className="relative w-32 h-32 sm:w-64 sm:h-64 mb-4">
-          <img 
+          <Image 
             src={songs[currentSong].albumArt} 
-            alt={songs[currentSong].album}
-            className="w-full h-full object-cover rounded-lg shadow-lg"
+            alt={`${songs[currentSong].title} album art`}
+            width={256}
+            height={256}
+            className="w-full h-full object-cover rounded-xl shadow-2xl" 
           />
           <button 
             className={`absolute top-2 right-2 p-1 rounded-full ${isLiked ? 'bg-red-500' : 'bg-white bg-opacity-20'}`}
