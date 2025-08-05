@@ -17,6 +17,7 @@ import {
 import { useTheme } from "../contexts/ThemeContext";
 import Calendar from "./Calendar";
 import WallpaperSelector from "./WallpaperSel";
+import useBatteryStatus from "../hooks/useBatteryStatus";
 
 interface ThemeContextType {
   theme: "light" | "dark";
@@ -29,7 +30,7 @@ interface MenuBarProps {
 const MenuBar: React.FC<MenuBarProps> = ({ switchWallpaper }) => {
   const { theme, toggleTheme } = useTheme() as ThemeContextType;
   const [dateTime, setDateTime] = useState<Date>(new Date());
-  const [batteryLevel, setBatteryLevel] = useState<number>(100);
+  const batteryStatus = useBatteryStatus();
   const wifiStrength: number = 3;
   const [isCalendarOpen, setIsCalendarOpen] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
@@ -57,14 +58,6 @@ const MenuBar: React.FC<MenuBarProps> = ({ switchWallpaper }) => {
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, []);
-
-  useEffect(() => {
-    const batteryInterval = setInterval(() => {
-      setBatteryLevel((prev) => (prev > 10 ? prev - 1 : 100));
-    }, 5000);
-
-    return () => clearInterval(batteryInterval);
   }, []);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>): void => {
@@ -118,9 +111,15 @@ const MenuBar: React.FC<MenuBarProps> = ({ switchWallpaper }) => {
   };
 
   const renderBatteryIcon = (): React.ReactNode => {
-    if (batteryLevel > 80)
+    const { level, charging } = batteryStatus;
+    
+    if (charging) {
+      return <BatteryCharging className="sm:w-4 w-6 sm:h-4 h-6 text-green-500" />;
+    }
+    
+    if (level > 80)
       return <BatteryFull className="sm:w-4 w-6 sm:h-4 h-6 text-black dark:text-white" />;
-    if (batteryLevel > 30)
+    if (level > 30)
       return <BatteryCharging className="sm:w-4 w-6 sm:h-4 h-6 text-black dark:text-white" />;
     return <BatteryLow className="sm:w-4 w-6 sm:h-4 h-6 text-red-500" />;
   };
@@ -187,7 +186,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ switchWallpaper }) => {
           <div className="relative group">
             {renderBatteryIcon()}
             <span className="absolute top-7 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-              {batteryLevel}%
+              {batteryStatus.level}% {batteryStatus.charging ? '⚡' : ''}
             </span>
           </div>
 
@@ -287,7 +286,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ switchWallpaper }) => {
             </div>
             <div className="flex items-center space-x-2 p-2">
               {renderBatteryIcon()}
-              <span>Battery: {batteryLevel}%</span>
+              <span>Battery: {batteryStatus.level}% {batteryStatus.charging ? '(Charging)' : ''}</span>
             </div>
 
             <div className="flex items-center space-x-2 p-2">
