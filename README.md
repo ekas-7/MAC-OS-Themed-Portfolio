@@ -117,3 +117,4 @@ Project Link: [https://github.com/ekas-7/MAC-OS-Themed-Portfolio](https://github
 ---
 
 Made with ❤️ by EKaspreeet Singh Atwal
+Under MIT License
