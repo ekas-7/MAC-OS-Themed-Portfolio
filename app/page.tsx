@@ -38,6 +38,7 @@ export default function Home() {
   });
 
   useEffect(() => {
+    
     localStorage.setItem("openWindows", JSON.stringify(openWindows));
   }, [openWindows]);
 
