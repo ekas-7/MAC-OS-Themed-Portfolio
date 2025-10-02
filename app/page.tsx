@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from "react";
 import Desktop from "./components/Desktop";
@@ -25,19 +25,37 @@ import ProfileCard from "./components/AboutMe";
 import ConnectWithMe from "./components/Social";
 import Projects from "./components/Project";
 import PacManGame from "./components/PacManGame";
-import WorkExperience from "./components/WorkExperience"; // ✅ Import WorkExperience
+import WorkExperience from "./components/WorkExperience";
 
 export default function Home() {
+  const [isMounted, setIsMounted] = useState(false);
+
   const [openWindows, setOpenWindows] = useState<string[]>([]);
+  const [wallpaper1, setWallpaper] = useState(wallpaper);
   const [isLoading, setIsLoading] = useState(true);
-  const [wallpaper1, setWallpaper] = useState(wallpaper); // Default wallpaper
 
   const wallpapers = [wallpaper, wallpaper2, wallpaper3, wallpaper4, wallpaper5, wallpaper7, wallpaper8, wallpaper9, wallpaper10];
 
+  useEffect(() => {
+    setIsMounted(true);
+
+    const savedWindows = localStorage.getItem("openWindows");
+    if (savedWindows) setOpenWindows(JSON.parse(savedWindows));
+
+    const savedWallpaper = localStorage.getItem("wallpaper");
+    if (savedWallpaper) setWallpaper({ src: savedWallpaper });
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
+    localStorage.setItem("openWindows", JSON.stringify(openWindows));
+  }, [openWindows, isMounted]);
+
   const switchWallpaper = (wallpaperSrc: string) => {
-    const selectedWallpaper = wallpapers.find((wallpaper) => wallpaper.src === wallpaperSrc);
+    const selectedWallpaper = wallpapers.find((wall) => wall.src === wallpaperSrc);
     if (selectedWallpaper) {
       setWallpaper(selectedWallpaper);
+      localStorage.setItem("wallpaper", selectedWallpaper.src);
     }
   };
 
@@ -48,23 +66,19 @@ export default function Home() {
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
-    if ((event.metaKey || event.ctrlKey) && event.key === "t") {
-      toggleWindow("terminal");
-    }
+    if ((event.metaKey || event.ctrlKey) && event.key === "t") toggleWindow("terminal");
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 10000);
-
+    const timer = setTimeout(() => setIsLoading(false), 10000);
     window.addEventListener("keydown", handleKeyDown);
-
     return () => {
       clearTimeout(timer);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
+
+  if (!isMounted) return null;
 
   return (
     <ThemeProvider>
@@ -79,106 +93,49 @@ export default function Home() {
             <MenuBar switchWallpaper={switchWallpaper} />
             <Desktop toggleWindow={toggleWindow} />
 
-            {/* About Me */}
             {openWindows.includes("about") && (
-              <Window
-                id="about"
-                title="About Me"
-                onClose={() => toggleWindow("about")}
-              >
+              <Window id="about" title="About Me" onClose={() => toggleWindow("about")}>
                 <ProfileCard />
               </Window>
             )}
-
-            {/* Work Experience ✅ */}
             {openWindows.includes("work-experience") && (
-              <Window
-                id="work-experience"
-                title="Work Experience"
-                onClose={() => toggleWindow("work-experience")}
-              >
+              <Window id="work-experience" title="Work Experience" onClose={() => toggleWindow("work-experience")}>
                 <WorkExperience />
               </Window>
             )}
-
-            {/* Projects */}
             {openWindows.includes("projects") && (
-              <Window
-                id="projects"
-                title="My Projects"
-                onClose={() => toggleWindow("projects")}
-              >
+              <Window id="projects" title="My Projects" onClose={() => toggleWindow("projects")}>
                 <Projects />
               </Window>
             )}
-
-            {/* Contact */}
             {openWindows.includes("contact") && (
-              <Window
-                id="contact"
-                title="Contact Me"
-                onClose={() => toggleWindow("contact")}
-              >
+              <Window id="contact" title="Contact Me" onClose={() => toggleWindow("contact")}>
                 <ConnectWithMe />
               </Window>
             )}
-
-            {/* VS Code */}
             {openWindows.includes("vscode") && (
-              <Window
-                id="vscode"
-                title="VS Code"
-                onClose={() => toggleWindow("vscode")}
-              >
+              <Window id="vscode" title="VS Code" onClose={() => toggleWindow("vscode")}>
                 <VSCodeEditor />
               </Window>
             )}
-
-            {/* Browser */}
             {openWindows.includes("browser") && (
-              <Window
-                id="browser"
-                title="Contact Me"
-                onClose={() => toggleWindow("browser")}
-              >
+              <Window id="browser" title="Browser" onClose={() => toggleWindow("browser")}>
                 <GeminiChat />
               </Window>
             )}
-
-            {/* Terminal */}
             {openWindows.includes("terminal") && (
-              <Window
-                id="terminal"
-                title="Terminal"
-                onClose={() => toggleWindow("terminal")}
-              >
+              <Window id="terminal" title="Terminal" onClose={() => toggleWindow("terminal")}>
                 <Terminal />
               </Window>
             )}
-
-            {/* Music Player */}
             {openWindows.includes("music-player") && (
-              <Window
-                id="music-player"
-                title="Music Player"
-                onClose={() => toggleWindow("music-player")}
-              >
+              <Window id="music-player" title="Music Player" onClose={() => toggleWindow("music-player")}>
                 <MusicPlayer />
               </Window>
             )}
-
-            {/* Resume */}
-            {openWindows.includes("resume") && (
-              <ResumeWindow onClose={() => toggleWindow("resume")} />
-            )}
-
-            {/* Pac-Man Game */}
+            {openWindows.includes("resume") && <ResumeWindow onClose={() => toggleWindow("resume")} />}
             {openWindows.includes("pacman-game") && (
-              <Window
-                id="pacman-game"
-                title="Pac-Man Game"
-                onClose={() => toggleWindow("pacman-game")}
-              >
+              <Window id="pacman-game" title="Pac-Man Game" onClose={() => toggleWindow("pacman-game")}>
                 <PacManGame />
               </Window>
             )}
