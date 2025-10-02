@@ -25,25 +25,21 @@ import ProfileCard from "./components/AboutMe";
 import ConnectWithMe from "./components/Social";
 import Projects from "./components/Project";
 import PacManGame from "./components/PacManGame";
-
+import WorkExperience from "./components/WorkExperience"; // ✅ Import WorkExperience
 
 export default function Home() {
   const [openWindows, setOpenWindows] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [wallpaper1, setWallpaper] = useState(wallpaper); // Default wallpaper
 
-  // Array of wallpapers
-  const wallpapers = [wallpaper, wallpaper2,wallpaper3,wallpaper4,wallpaper5,wallpaper7,wallpaper8,wallpaper9,wallpaper10];
+  const wallpapers = [wallpaper, wallpaper2, wallpaper3, wallpaper4, wallpaper5, wallpaper7, wallpaper8, wallpaper9, wallpaper10];
 
-  // Function to toggle between wallpapers
   const switchWallpaper = (wallpaperSrc: string) => {
-    
     const selectedWallpaper = wallpapers.find((wallpaper) => wallpaper.src === wallpaperSrc);
     if (selectedWallpaper) {
-      setWallpaper(selectedWallpaper); // Assuming setWallpaper is a state setter for the current wallpaper
+      setWallpaper(selectedWallpaper);
     }
   };
-  
 
   const toggleWindow = (id: string) => {
     setOpenWindows((prev) =>
@@ -51,7 +47,6 @@ export default function Home() {
     );
   };
 
-  // Function to handle Cmd + T event
   const handleKeyDown = (event: KeyboardEvent) => {
     if ((event.metaKey || event.ctrlKey) && event.key === "t") {
       toggleWindow("terminal");
@@ -63,12 +58,10 @@ export default function Home() {
       setIsLoading(false);
     }, 10000);
 
-    // Adding the keydown event listener for Cmd + T
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       clearTimeout(timer);
-      // Cleanup the event listener when the component unmounts
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
@@ -77,9 +70,7 @@ export default function Home() {
     <ThemeProvider>
       <div
         className="min-h-screen min-w-full overflow-hidden bg-cover bg-center text-black dark:text-white transition-colors duration-300"
-        style={{
-          backgroundImage: `url(${wallpaper1.src})`,
-        }}
+        style={{ backgroundImage: `url(${wallpaper1.src})` }}
       >
         {isLoading ? (
           <ApplePreloader />
@@ -87,6 +78,8 @@ export default function Home() {
           <>
             <MenuBar switchWallpaper={switchWallpaper} />
             <Desktop toggleWindow={toggleWindow} />
+
+            {/* About Me */}
             {openWindows.includes("about") && (
               <Window
                 id="about"
@@ -96,6 +89,19 @@ export default function Home() {
                 <ProfileCard />
               </Window>
             )}
+
+            {/* Work Experience ✅ */}
+            {openWindows.includes("work-experience") && (
+              <Window
+                id="work-experience"
+                title="Work Experience"
+                onClose={() => toggleWindow("work-experience")}
+              >
+                <WorkExperience />
+              </Window>
+            )}
+
+            {/* Projects */}
             {openWindows.includes("projects") && (
               <Window
                 id="projects"
@@ -105,6 +111,8 @@ export default function Home() {
                 <Projects />
               </Window>
             )}
+
+            {/* Contact */}
             {openWindows.includes("contact") && (
               <Window
                 id="contact"
@@ -114,6 +122,8 @@ export default function Home() {
                 <ConnectWithMe />
               </Window>
             )}
+
+            {/* VS Code */}
             {openWindows.includes("vscode") && (
               <Window
                 id="vscode"
@@ -123,6 +133,8 @@ export default function Home() {
                 <VSCodeEditor />
               </Window>
             )}
+
+            {/* Browser */}
             {openWindows.includes("browser") && (
               <Window
                 id="browser"
@@ -132,6 +144,8 @@ export default function Home() {
                 <GeminiChat />
               </Window>
             )}
+
+            {/* Terminal */}
             {openWindows.includes("terminal") && (
               <Window
                 id="terminal"
@@ -141,6 +155,8 @@ export default function Home() {
                 <Terminal />
               </Window>
             )}
+
+            {/* Music Player */}
             {openWindows.includes("music-player") && (
               <Window
                 id="music-player"
@@ -150,9 +166,13 @@ export default function Home() {
                 <MusicPlayer />
               </Window>
             )}
+
+            {/* Resume */}
             {openWindows.includes("resume") && (
               <ResumeWindow onClose={() => toggleWindow("resume")} />
             )}
+
+            {/* Pac-Man Game */}
             {openWindows.includes("pacman-game") && (
               <Window
                 id="pacman-game"
@@ -162,9 +182,8 @@ export default function Home() {
                 <PacManGame />
               </Window>
             )}
+
             <Dock toggleWindow={toggleWindow} />
-            {/* Button to switch wallpaper */}
-            
           </>
         )}
       </div>
