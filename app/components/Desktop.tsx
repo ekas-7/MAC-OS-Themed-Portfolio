@@ -1,4 +1,5 @@
-import { User , File, Mail, Briefcase } from 'lucide-react'
+import { User, File, Mail, Briefcase } from 'lucide-react'
+import { ClipboardList } from 'lucide-react' // ✅ New icon for Work Experience
 
 interface DesktopProps {
   toggleWindow: (id: string) => void
@@ -25,11 +26,16 @@ export default function Desktop({ toggleWindow }: DesktopProps) {
       id: 'resume',
       label: 'Resume',
       icon: <File className="w-5 h-5 sm:w-6 sm:h-6 text-black dark:text-white" />
+    },
+    {
+      id: 'work-experience', // ✅ Work Experience
+      label: 'Work Experience',
+      icon: <ClipboardList className="w-5 h-5 sm:w-6 sm:h-6 text-black dark:text-white" />
     }
   ]
 
   return (
-    <div className="absolute right-0 top-8 p-4 sm:flex flex-col gap-8  hidden">
+    <div className="absolute right-0 top-8 p-4 sm:flex flex-col gap-8 hidden">
       {icons.map(({ id, label, icon }) => (
         <button
           key={id}

@@ -10,6 +10,7 @@ import {
   Gamepad2 // Import Gamepad2 icon for the game
 } from 'lucide-react'
 import {  ReactNode } from 'react'
+import { ClipboardList } from 'lucide-react';
 
 
 interface DockItemProps {
@@ -101,6 +102,12 @@ export default function Dock({ toggleWindow }: DockProps) {
           <File className="w-5 h-5 sm:w-5 sm:h-5 text-gray-600/80 dark:text-white/80 
             group-hover:text-gray-900 dark:group-hover:text-white" />
         </DockItem>
+
+        <DockItem label="Work Experience" onClick={() => toggleWindow('work-experience')}>
+  <ClipboardList className="w-5 h-5 sm:w-5 sm:h-5 text-gray-600/80 dark:text-white/80 
+    group-hover:text-gray-900 dark:group-hover:text-white" />
+</DockItem>
+        
 
         {/* Added Pac-Man Game item */}
         <DockItem label="Pac-Man Game" onClick={() => toggleWindow('pacman-game')}>
