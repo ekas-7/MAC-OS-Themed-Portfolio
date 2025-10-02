@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from "react";
 import Desktop from "./components/Desktop";
@@ -28,16 +28,36 @@ import PacManGame from "./components/PacManGame";
 import WorkExperience from "./components/WorkExperience"; // ✅ Import WorkExperience
 
 export default function Home() {
-  const [openWindows, setOpenWindows] = useState<string[]>([]);
+  // Load open windows from localStorage
+  const [openWindows, setOpenWindows] = useState<string[]>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("openWindows");
+      return saved ? JSON.parse(saved) : [];
+    }
+    return [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("openWindows", JSON.stringify(openWindows));
+  }, [openWindows]);
+
   const [isLoading, setIsLoading] = useState(true);
-  const [wallpaper1, setWallpaper] = useState(wallpaper); // Default wallpaper
+
+  const [wallpaper1, setWallpaper] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("wallpaper");
+      return saved ? { src: saved } : wallpaper;
+    }
+    return wallpaper;
+  });
 
   const wallpapers = [wallpaper, wallpaper2, wallpaper3, wallpaper4, wallpaper5, wallpaper7, wallpaper8, wallpaper9, wallpaper10];
 
   const switchWallpaper = (wallpaperSrc: string) => {
-    const selectedWallpaper = wallpapers.find((wallpaper) => wallpaper.src === wallpaperSrc);
+    const selectedWallpaper = wallpapers.find((wall) => wall.src === wallpaperSrc);
     if (selectedWallpaper) {
       setWallpaper(selectedWallpaper);
+      localStorage.setItem("wallpaper", selectedWallpaper.src);
     }
   };
 
@@ -138,7 +158,7 @@ export default function Home() {
             {openWindows.includes("browser") && (
               <Window
                 id="browser"
-                title="Contact Me"
+                title="Browser"
                 onClose={() => toggleWindow("browser")}
               >
                 <GeminiChat />
