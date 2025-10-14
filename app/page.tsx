@@ -72,7 +72,7 @@ export default function Home() {
   return (
     <ThemeProvider>
       <div
-        className="min-h-screen min-w-full overflow-hidden bg-cover bg-center text-black dark:text-white transition-colors duration-300"
+        className="min-h-screen min-w-full overflow-hidden bg-cover bg-center bg-no-repeat text-black dark:text-white transition-colors duration-300 relative"
   style={{ backgroundImage: `url(${wallpaper1})` }}
       >
         {isLoading ? (

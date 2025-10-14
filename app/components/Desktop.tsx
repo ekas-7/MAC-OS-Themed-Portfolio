@@ -35,7 +35,7 @@ export default function Desktop({ toggleWindow }: DesktopProps) {
   ]
 
   return (
-    <div className="absolute right-0 top-8 p-4 sm:flex flex-col gap-8 hidden">
+    <div className="absolute right-2 sm:right-4 top-8 p-2 sm:p-4 flex flex-col gap-4 sm:gap-8">
       {icons.map(({ id, label, icon }) => (
         <button
           key={id}
@@ -43,10 +43,10 @@ export default function Desktop({ toggleWindow }: DesktopProps) {
           onClick={() => toggleWindow(id)}
         >
           <div className="group flex flex-col items-center">
-            <div className={`w-10 h-10 sm:w-12 sm:h-12 bg-gray-100/75 dark:bg-gray-800/75 rounded-xl flex items-center justify-center shadow-lg border border-white/20 dark:border-white/10 group-hover:scale-105 transition-transform`}>
+            <div className={`w-8 h-8 sm:w-12 sm:h-12 bg-gray-100/75 dark:bg-gray-800/75 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg border border-white/20 dark:border-white/10 group-hover:scale-105 transition-transform`}>
               {icon}
             </div>
-            <span className="mt-1 text-white dark:text-white text-xs sm:text-sm">
+            <span className="mt-1 text-white dark:text-white text-[10px] sm:text-sm leading-tight text-center max-w-[60px] sm:max-w-none break-words">
               {label}
             </span>
           </div>

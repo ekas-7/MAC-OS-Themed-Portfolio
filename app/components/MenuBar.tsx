@@ -114,21 +114,21 @@ const MenuBar: React.FC<MenuBarProps> = ({ switchWallpaper }) => {
     const { level, charging } = batteryStatus;
     
     if (charging) {
-      return <BatteryCharging className="sm:w-4 w-6 sm:h-4 h-6 text-green-500" />;
+      return <BatteryCharging className="w-4 h-4 text-green-500" />;
     }
     
     if (level > 80)
-      return <BatteryFull className="sm:w-4 w-6 sm:h-4 h-6 text-black dark:text-white" />;
+      return <BatteryFull className="w-4 h-4 text-black dark:text-white" />;
     if (level > 30)
-      return <BatteryCharging className="sm:w-4 w-6 sm:h-4 h-6 text-black dark:text-white" />;
-    return <BatteryLow className="sm:w-4 w-6 sm:h-4 h-6 text-red-500" />;
+      return <BatteryCharging className="w-4 h-4 text-black dark:text-white" />;
+    return <BatteryLow className="w-4 h-4 text-red-500" />;
   };
 
   const renderWifiIcon = (): React.ReactNode => {
-    if (wifiStrength === 3) return <Wifi className="sm:w-4 w-6 sm:h-4 h-6 text-black dark:text-white" />;
-    if (wifiStrength === 2) return <Wifi className="sm:w-4 w-6 sm:h-4 h-6 text-yellow-500" />;
-    if (wifiStrength === 1) return <Wifi className="sm:w-4 w-6 sm:h-4 h-6 text-red-500" />;
-    return <WifiOff className="sm:w-4 w-6 sm:h-4 h-6 text-gray-500" />;
+    if (wifiStrength === 3) return <Wifi className="w-4 h-4 text-black dark:text-white" />;
+    if (wifiStrength === 2) return <Wifi className="w-4 h-4 text-yellow-500" />;
+    if (wifiStrength === 1) return <Wifi className="w-4 h-4 text-red-500" />;
+    return <WifiOff className="w-4 h-4 text-gray-500" />;
   };
 
   const formatDate = (date: Date): string => {
@@ -149,50 +149,51 @@ const MenuBar: React.FC<MenuBarProps> = ({ switchWallpaper }) => {
   return (
     <>
       <div
-        className={`fixed top-0 left-0 right-0 sm:h-8 h-9 ${
+        className={`fixed top-0 left-0 right-0 h-8 sm:h-8 ${
           theme === "light"
             ? "bg-gradient-to-br from-white/70 to-gray-100/70 text-black"
             : "bg-gradient-to-br from-gray-900/70 to-gray-800/70 text-white"
-        } backdrop-blur-xl flex items-center sm:justify-between px-4 z-50 transition-colors duration-300 justify-evenly`}
+        } backdrop-blur-xl flex items-center justify-between px-2 sm:px-4 z-50 transition-colors duration-300`}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <div className="flex items-center space-x-2">
-          <span className="hidden sm:block text-sm">Ekaspreet Singh Atwal</span>
-          <LucideCopyright className="sm:h-4 h-5 sm:w-4 w-5 font-thin hidden sm:block"/>
-          <span className="hidden sm:block text-sm ">2025</span>
+        <div className="flex items-center space-x-1 sm:space-x-2">
+          <span className="hidden md:block text-xs sm:text-sm">Ekaspreet Singh Atwal</span>
+          <span className="md:hidden text-xs">E. S. Atwal</span>
+          <LucideCopyright className="h-3 w-3 sm:h-4 sm:w-4 font-thin"/>
+          <span className="text-xs sm:text-sm">2025</span>
         </div>
         
-        <div className="flex items-center space-x-4 sm:space-x-2">
-          <ChevronDown className="sm:hidden w-6 h-6" />
+        <div className="flex items-center space-x-1 sm:space-x-2">
+          <ChevronDown className="sm:hidden w-5 h-5" />
           <button
             onClick={toggleTheme}
             aria-label="Toggle theme"
-            className="p-1 rounded-full hover:bg-gray-200/50 dark:hover:bg-black/25 transition-colors"
+            className="p-0.5 sm:p-1 rounded-full hover:bg-gray-200/50 dark:hover:bg-black/25 transition-colors"
           >
             {theme === "light" ? (
-              <Moon className="sm:w-4 w-6 sm:h-4 h-6" />
+              <Moon className="w-4 h-4 sm:w-4 sm:h-4" />
             ) : (
-              <Sun className="sm:w-4 w-6 sm:h-4 h-6" />
+              <Sun className="w-4 h-4 sm:w-4 sm:h-4" />
             )}
           </button>
           
           <Settings
-            onClick={handleOpenWallpaperSelector} // Open the wallpaper selector when clicked
-            className="sm:w-4 w-6 sm:h-4 h-6 hover:scale-110 transition-transform"
+            onClick={handleOpenWallpaperSelector}
+            className="w-4 h-4 sm:w-4 sm:h-4 hover:scale-110 transition-transform cursor-pointer"
           />
           
           <div className="relative group">
             {renderBatteryIcon()}
-            <span className="absolute top-7 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+            <span className="absolute top-6 sm:top-7 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
               {batteryStatus.level}% {batteryStatus.charging ? '⚡' : ''}
             </span>
           </div>
 
           <div className="relative group">
             {renderWifiIcon()}
-            <span className="absolute top-7 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+            <span className="absolute top-6 sm:top-7 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
               {`${wifiStrength * 33}%`}
             </span>
           </div>
@@ -201,12 +202,12 @@ const MenuBar: React.FC<MenuBarProps> = ({ switchWallpaper }) => {
             <button
               onClick={handleCalendarClick}
               aria-label="Toggle calendar"
-              className={`text-md sm:text-sm ${theme === "light" ? "text-black" : "text-white"}`}
+              className={`text-xs sm:text-sm ${theme === "light" ? "text-black" : "text-white"}`}
             >
               {formatDate(dateTime)}
             </button>
             {isCalendarOpen && (
-              <div className="absolute top-8 left-[0%] transform -translate-x-1/2 z-10 sm:block hidden">
+              <div className="absolute top-6 sm:top-8 left-[0%] transform -translate-x-1/2 z-10 sm:block hidden">
                 <Calendar />
               </div>
             )}
@@ -215,7 +216,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ switchWallpaper }) => {
           <div className="relative">
             <button
               aria-label="Display time"
-              className={`sm:text-sm text-md ${theme === "light" ? "text-black" : "text-white"}`}
+              className={`text-xs sm:text-sm ${theme === "light" ? "text-black" : "text-white"}`}
             >
               {formatTime(dateTime)}
             </button>
@@ -224,12 +225,12 @@ const MenuBar: React.FC<MenuBarProps> = ({ switchWallpaper }) => {
           <button
             onClick={handleFullscreenToggle}
             aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-            className="p-1 rounded-full hover:bg-gray-200/50 dark:hover:bg-gray-700/50 transition-colors hidden sm:block"
+            className="p-0.5 sm:p-1 rounded-full hover:bg-gray-200/50 dark:hover:bg-gray-700/50 transition-colors hidden sm:block"
           >
             {isFullscreen ? (
-              <Minimize2 className="sm:w-4 w-6 sm:h-4 h-6" />
+              <Minimize2 className="w-4 h-4 sm:w-4 sm:h-4" />
             ) : (
-              <Maximize2 className="sm:w-4 w-6 sm:h-4 h-6" />
+              <Maximize2 className="w-4 h-4 sm:w-4 sm:h-4" />
             )}
           </button>
         </div>
@@ -237,7 +238,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ switchWallpaper }) => {
 
       <div
         ref={drawerRef}
-        className={`fixed top-9 left-0 right-0 sm:hidden ${
+        className={`fixed top-8 left-0 right-0 sm:hidden ${
           theme === "light" ? "bg-white" : "bg-gray-900"
         } shadow-lg transition-transform duration-300 ease-in-out z-40`}
         style={{
@@ -246,55 +247,54 @@ const MenuBar: React.FC<MenuBarProps> = ({ switchWallpaper }) => {
           maxHeight: '80vh'
         }}
       >
-        <div className="p-4 space-y-4">
+        <div className="p-3 space-y-3">
           <div className="flex items-center justify-between">
-            <span className="font-semibold">Ekaspreet Singh Atwal</span>
-            <div className="flex items-center space-x-2">
-              <LucideCopyright className="h-4 w-4" />
-              <span>2025</span>
+            <span className="font-semibold text-sm">Ekaspreet Singh Atwal</span>
+            <div className="flex items-center space-x-1">
+              <LucideCopyright className="h-3 w-3" />
+              <span className="text-sm">2025</span>
             </div>
             <button onClick={handleDrawerClose} aria-label="Close Drawer" className="p-1 rounded-full">
-              <X className="w-6 h-6" />
+              <X className="w-5 h-5" />
             </button>
           </div>
 
-          <div className="flex flex-col space-y-4">
+          <div className="flex flex-col space-y-3">
             <button
               onClick={toggleTheme}
-              className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
             >
               {theme === "light" ? (
                 <>
-                  <Moon className="w-6 h-6" />
+                  <Moon className="w-5 h-5" />
                   <span>Dark Mode</span>
                 </>
               ) : (
                 <>
-                  <Sun className="w-6 h-6" />
+                  <Sun className="w-5 h-5" />
                   <span>Light Mode</span>
                 </>
               )}
             </button>
             
             
-          <div className="flex items-center space-x-2 p-2"  onClick={handleOpenWallpaperSelector } >
+          <div className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"  onClick={handleOpenWallpaperSelector } >
           <Settings
-           // Open the wallpaper selector when clicked
-            className="h-6 w-6"
+            className="h-5 w-5"
           />
               <span>Change Background</span>
             </div>
-            <div className="flex items-center space-x-2 p-2">
+            <div className="flex items-center space-x-3 p-3">
               {renderBatteryIcon()}
               <span>Battery: {batteryStatus.level}% {batteryStatus.charging ? '(Charging)' : ''}</span>
             </div>
 
-            <div className="flex items-center space-x-2 p-2">
+            <div className="flex items-center space-x-3 p-3">
               {renderWifiIcon()}
               <span>WiFi Strength: {wifiStrength * 33}%</span>
             </div>
 
-            <div className="p-2">
+            <div className="p-3">
               <Calendar />
             </div>
           </div>
