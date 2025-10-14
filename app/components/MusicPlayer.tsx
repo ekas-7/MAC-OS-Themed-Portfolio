@@ -133,23 +133,23 @@ export default function FullScreenMusicPlayer() {
     return <Volume2 size={16} className="text-green-500" />
   }
 
-  const nextSong = () => {
+  const nextSong = useCallback(() => {
     const nextIndex = (currentSong + 1) % spotifyTracks.length
     setCurrentSong(nextIndex)
     if (spotifyController) {
       spotifyController.loadUri(spotifyTracks[nextIndex].uri)
     }
     setIsPlaying(true)
-  }
+  }, [currentSong, spotifyController])
 
-  const prevSong = () => {
+  const prevSong = useCallback(() => {
     const prevIndex = (currentSong - 1 + spotifyTracks.length) % spotifyTracks.length
     setCurrentSong(prevIndex)
     if (spotifyController) {
       spotifyController.loadUri(spotifyTracks[prevIndex].uri)
     }
     setIsPlaying(true)
-  }
+  }, [currentSong, spotifyController])
 
   // Initialize Spotify iframe API
   useEffect(() => {
