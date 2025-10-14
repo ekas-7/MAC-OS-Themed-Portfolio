@@ -14,6 +14,20 @@ interface SpotifyTrack {
   uri: string
 }
 
+// Minimal interfaces for the Spotify iframe controller used in this component
+interface SpotifyController {
+  pause: () => void
+  resume: () => void
+  setVolume: (v: number) => void
+  loadUri: (uri: string) => void
+  seek: (ms: number) => void
+  addListener: (event: string, cb: (...args: unknown[]) => void) => void
+}
+
+interface SpotifyWindow {
+  createController: (el: HTMLElement, options: Record<string, unknown>, cb: (controller: SpotifyController) => void) => void
+}
+
 // Popular tracks with Spotify URIs
 const spotifyTracks: SpotifyTrack[] = [
   {
@@ -81,7 +95,7 @@ export default function FullScreenMusicPlayer() {
   const [isLiked, setIsLiked] = useState(false)
   const [isShuffled, setIsShuffled] = useState(false)
   const [repeatMode, setRepeatMode] = useState(0)
-  const [spotifyController, setSpotifyController] = useState<any>(null)
+  const [spotifyController, setSpotifyController] = useState<SpotifyController | null>(null)
   const [isSpotifyReady, setIsSpotifyReady] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
@@ -140,18 +154,18 @@ export default function FullScreenMusicPlayer() {
   // Initialize Spotify iframe API
   useEffect(() => {
     const initializeSpotify = () => {
-      if (typeof window !== 'undefined' && (window as any).Spotify) {
+      if (typeof window !== 'undefined' && (window as unknown as { Spotify?: SpotifyWindow }).Spotify) {
         const element = iframeRef.current
         if (element) {
-          const options = {
+          const options: { uri: string; width: number; height: number; view: string; theme: string } = {
             uri: spotifyTracks[currentSong].uri,
             width: 300,
             height: 80,
             view: 'list',
             theme: 'dark'
-          }
-          
-          (window as any).Spotify.createController(element, options, (controller: any) => {
+          };
+
+          ;(window as unknown as { Spotify: SpotifyWindow }).Spotify.createController(element, options, (controller: SpotifyController) => {
             setSpotifyController(controller)
             setIsSpotifyReady(true)
             setIsLoading(false)
@@ -162,14 +176,18 @@ export default function FullScreenMusicPlayer() {
               setIsLoading(false)
             })
             
-            controller.addListener('playback_update', (state: any) => {
-              setIsPlaying(state.is_playing)
-              setProgress(state.position / 1000) // Convert to seconds
-              setDuration(state.duration / 1000) // Convert to seconds
+            controller.addListener('playback_update', (...args: unknown[]) => {
+              const state = args[0] as { is_playing?: boolean; position?: number; duration?: number } | undefined
+              if (state) {
+                setIsPlaying(Boolean(state.is_playing))
+                setProgress((state.position ?? 0) / 1000) // Convert to seconds
+                setDuration((state.duration ?? 0) / 1000) // Convert to seconds
+              }
             })
 
-            controller.addListener('playback_status', (state: any) => {
-              if (state.track_window && state.track_window.current_track) {
+            controller.addListener('playback_status', (...args: unknown[]) => {
+              const state = args[0] as { track_window?: { current_track?: unknown } | null } | undefined
+              if (state && state.track_window && state.track_window.current_track) {
                 // Track ended, move to next
                 if (repeatMode !== 2) {
                   nextSong()
@@ -177,7 +195,7 @@ export default function FullScreenMusicPlayer() {
               }
             })
 
-            controller.addListener('initialization_error', (error: any) => {
+            controller.addListener('initialization_error', (error: unknown) => {
               console.error('Spotify initialization error:', error)
               setHasError(true)
               setIsLoading(false)
@@ -188,7 +206,7 @@ export default function FullScreenMusicPlayer() {
     }
 
     // Check if Spotify API is already loaded
-    if (typeof window !== 'undefined' && (window as any).Spotify) {
+  if (typeof window !== 'undefined' && (window as unknown as { Spotify?: SpotifyWindow }).Spotify) {
       initializeSpotify()
     } else {
       // Wait for Spotify API to load with timeout
@@ -197,7 +215,7 @@ export default function FullScreenMusicPlayer() {
       
       const checkSpotify = setInterval(() => {
         attempts++
-        if (typeof window !== 'undefined' && (window as any).Spotify) {
+        if (typeof window !== 'undefined' && (window as unknown as { Spotify?: SpotifyWindow }).Spotify) {
           clearInterval(checkSpotify)
           initializeSpotify()
         } else if (attempts >= maxAttempts) {
@@ -244,7 +262,7 @@ export default function FullScreenMusicPlayer() {
             </div>
             <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-2">Spotify Player Unavailable</h2>
             <p className="text-gray-600 dark:text-gray-400 text-center max-w-md">
-              The Spotify player couldn't be loaded. This might be due to network issues or browser restrictions. 
+              The Spotify player couldn&apos;t be loaded. This might be due to network issues or browser restrictions. 
               Please try refreshing the page or check your internet connection.
             </p>
             <button 

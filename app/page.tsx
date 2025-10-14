@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Desktop from "./components/Desktop";
 import Dock from "./components/Dock";
 import MenuBar from "./components/MenuBar";
@@ -11,15 +11,7 @@ import VSCodeEditor from "./components/VSCodeEditor";
 import GeminiChat from "./components/BrowserWindow";
 import Terminal from "./components/Terminal";
 import ResumeWindow from "./components/ResumeWindow";
-import wallpaper3 from "@/public/wallpaper-white.jpg";
-import wallpaper2 from "@/public/wallpaper2.jpg";
 import wallpaper from "@/public/wallpaper3.jpg";
-import wallpaper4 from "@/public/wallpaper4.jpg";
-import wallpaper5 from "@/public/wallpaper5.jpg";
-import wallpaper7 from "@/public/wallpaper7.jpg";
-import wallpaper8 from "@/public/wallpaper8.jpg";
-import wallpaper9 from "@/public/wallpaper9.jpg";
-import wallpaper10 from "@/public/wallpaper10.jpg";
 import MusicPlayer from "./components/MusicPlayer";
 import ProfileCard from "./components/AboutMe";
 import ConnectWithMe from "./components/Social";
@@ -31,10 +23,10 @@ export default function Home() {
   const [isMounted, setIsMounted] = useState(false);
 
   const [openWindows, setOpenWindows] = useState<string[]>([]);
-  const [wallpaper1, setWallpaper] = useState(wallpaper);
+  const [wallpaper1, setWallpaper] = useState<string>(wallpaper.src);
   const [isLoading, setIsLoading] = useState(true);
 
-  const wallpapers = [wallpaper, wallpaper2, wallpaper3, wallpaper4, wallpaper5, wallpaper7, wallpaper8, wallpaper9, wallpaper10];
+  // Wallpapers are managed via WallpaperSelector; stored wallpaper src in state and localStorage
 
   useEffect(() => {
     setIsMounted(true);
@@ -43,7 +35,7 @@ export default function Home() {
     if (savedWindows) setOpenWindows(JSON.parse(savedWindows));
 
     const savedWallpaper = localStorage.getItem("wallpaper");
-    if (savedWallpaper) setWallpaper({ src: savedWallpaper });
+    if (savedWallpaper) setWallpaper(savedWallpaper);
   }, []);
 
   useEffect(() => {
@@ -52,11 +44,8 @@ export default function Home() {
   }, [openWindows, isMounted]);
 
   const switchWallpaper = (wallpaperSrc: string) => {
-    const selectedWallpaper = wallpapers.find((wall) => wall.src === wallpaperSrc);
-    if (selectedWallpaper) {
-      setWallpaper(selectedWallpaper);
-      localStorage.setItem("wallpaper", selectedWallpaper.src);
-    }
+    setWallpaper(wallpaperSrc);
+    localStorage.setItem("wallpaper", wallpaperSrc);
   };
 
   const toggleWindow = (id: string) => {
@@ -65,9 +54,9 @@ export default function Home() {
     );
   };
 
-  const handleKeyDown = (event: KeyboardEvent) => {
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
     if ((event.metaKey || event.ctrlKey) && event.key === "t") toggleWindow("terminal");
-  };
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 10000);
@@ -76,7 +65,7 @@ export default function Home() {
       clearTimeout(timer);
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [handleKeyDown]);
 
   if (!isMounted) return null;
 
@@ -84,7 +73,7 @@ export default function Home() {
     <ThemeProvider>
       <div
         className="min-h-screen min-w-full overflow-hidden bg-cover bg-center text-black dark:text-white transition-colors duration-300"
-        style={{ backgroundImage: `url(${wallpaper1.src})` }}
+  style={{ backgroundImage: `url(${wallpaper1})` }}
       >
         {isLoading ? (
           <ApplePreloader />
