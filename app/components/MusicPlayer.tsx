@@ -100,6 +100,7 @@ export default function FullScreenMusicPlayer() {
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
   const iframeRef = useRef<HTMLDivElement>(null)
+  const spotifyInitRef = useRef(false)
 
   const formatTime = (seconds: number) => {
     if (isNaN(seconds)) return "0:00"
@@ -153,80 +154,113 @@ export default function FullScreenMusicPlayer() {
 
   // Initialize Spotify iframe API
   useEffect(() => {
+    // Respect environment flag to enable/disable Spotify integration
+    const spotifyEnabled = typeof process !== 'undefined' && (process.env.NEXT_PUBLIC_ENABLE_SPOTIFY ?? 'true') !== 'false'
+
+    if (!spotifyEnabled) {
+      // If Spotify is disabled via env, show a friendly message and skip initialization
+      console.info('Spotify integration disabled via NEXT_PUBLIC_ENABLE_SPOTIFY')
+      setHasError(true)
+      setIsLoading(false)
+      return
+    }
+
+    let checkSpotify: number | null = null
+    let attempts = 0
+    const maxAttempts = 50 // ~10s when using 200ms interval below
+    const intervalMs = 200
+    let isMounted = true
+
     const initializeSpotify = () => {
+      // Prevent double initialization (React StrictMode/dev double-invoke)
+      if (spotifyInitRef.current) return
+      spotifyInitRef.current = true
+
       if (typeof window !== 'undefined' && (window as unknown as { Spotify?: SpotifyWindow }).Spotify) {
         const element = iframeRef.current
-        if (element) {
-          const options: { uri: string; width: number; height: number; view: string; theme: string } = {
-            uri: spotifyTracks[currentSong].uri,
-            width: 300,
-            height: 80,
-            view: 'list',
-            theme: 'dark'
-          };
+        if (!element) return
 
-          ;(window as unknown as { Spotify: SpotifyWindow }).Spotify.createController(element, options, (controller: SpotifyController) => {
-            setSpotifyController(controller)
-            setIsSpotifyReady(true)
-            setIsLoading(false)
-            
-            // Set up event listeners
-            controller.addListener('ready', () => {
-              console.log('Spotify player ready')
-              setIsLoading(false)
-            })
-            
-            controller.addListener('playback_update', (...args: unknown[]) => {
-              const state = args[0] as { is_playing?: boolean; position?: number; duration?: number } | undefined
-              if (state) {
-                setIsPlaying(Boolean(state.is_playing))
-                setProgress((state.position ?? 0) / 1000) // Convert to seconds
-                setDuration((state.duration ?? 0) / 1000) // Convert to seconds
-              }
-            })
-
-            controller.addListener('playback_status', (...args: unknown[]) => {
-              const state = args[0] as { track_window?: { current_track?: unknown } | null } | undefined
-              if (state && state.track_window && state.track_window.current_track) {
-                // Track ended, move to next
-                if (repeatMode !== 2) {
-                  nextSong()
-                }
-              }
-            })
-
-            controller.addListener('initialization_error', (error: unknown) => {
-              console.error('Spotify initialization error:', error)
-              setHasError(true)
-              setIsLoading(false)
-            })
-          })
+        const options: { uri: string; width: number; height: number; view: string; theme: string } = {
+          uri: spotifyTracks[currentSong].uri,
+          width: 300,
+          height: 80,
+          view: 'list',
+          theme: 'dark'
         }
+
+        ;(window as unknown as { Spotify: SpotifyWindow }).Spotify.createController(element, options, (controller: SpotifyController) => {
+          if (!isMounted) return
+          setSpotifyController(controller)
+          setIsSpotifyReady(true)
+          setIsLoading(false)
+
+          // Set up event listeners
+          controller.addListener('ready', () => {
+            console.log('Spotify player ready')
+            setIsLoading(false)
+          })
+
+          controller.addListener('playback_update', (...args: unknown[]) => {
+            const state = args[0] as { is_playing?: boolean; position?: number; duration?: number } | undefined
+            if (state) {
+              setIsPlaying(Boolean(state.is_playing))
+              setProgress((state.position ?? 0) / 1000) // Convert to seconds
+              setDuration((state.duration ?? 0) / 1000) // Convert to seconds
+            }
+          })
+
+          controller.addListener('playback_status', (...args: unknown[]) => {
+            const state = args[0] as { track_window?: { current_track?: unknown } | null } | undefined
+            if (state && state.track_window && state.track_window.current_track) {
+              // Track ended, move to next
+              if (repeatMode !== 2) {
+                nextSong()
+              }
+            }
+          })
+
+          controller.addListener('initialization_error', (error: unknown) => {
+            console.warn('Spotify initialization error:', error)
+            setHasError(true)
+            setIsLoading(false)
+          })
+        })
       }
     }
 
-    // Check if Spotify API is already loaded
-  if (typeof window !== 'undefined' && (window as unknown as { Spotify?: SpotifyWindow }).Spotify) {
+    // If already present, initialize immediately
+    if (typeof window !== 'undefined' && (window as unknown as { Spotify?: SpotifyWindow }).Spotify) {
       initializeSpotify()
     } else {
-      // Wait for Spotify API to load with timeout
-      let attempts = 0
-      const maxAttempts = 50 // 5 seconds timeout
-      
-      const checkSpotify = setInterval(() => {
-        attempts++
+      // Poll for the Spotify object with a slightly longer timeout and proper cleanup
+      checkSpotify = window.setInterval(() => {
+        attempts += 1
+        if (!isMounted) return
+
         if (typeof window !== 'undefined' && (window as unknown as { Spotify?: SpotifyWindow }).Spotify) {
-          clearInterval(checkSpotify)
+          if (checkSpotify != null) {
+            clearInterval(checkSpotify)
+            checkSpotify = null
+          }
           initializeSpotify()
         } else if (attempts >= maxAttempts) {
-          clearInterval(checkSpotify)
+          if (checkSpotify != null) {
+            clearInterval(checkSpotify)
+            checkSpotify = null
+          }
+          // Don't spam console.error during dev; warn once and show the UI fallback
+          console.warn('Spotify API failed to load within timeout')
           setHasError(true)
           setIsLoading(false)
-          console.error('Spotify API failed to load within timeout')
         }
-      }, 100)
-      
-      return () => clearInterval(checkSpotify)
+      }, intervalMs)
+    }
+
+    return () => {
+      isMounted = false
+      if (checkSpotify != null) {
+        clearInterval(checkSpotify)
+      }
     }
   }, [currentSong, nextSong, repeatMode])
 
