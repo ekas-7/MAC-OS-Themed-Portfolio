@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { Github, ExternalLink, Play, Image as ImageIcon } from 'lucide-react';
-import GitHubProjects from './OtherProject';
 
 interface Project {
   title: string;
@@ -15,13 +14,67 @@ interface Project {
 
 const initialProjects: Project[] = [
   {
-    title: "Blog It",
-    description: "This is a blogging application inspired by Medium. The project is built from scratch using a modern tech stack and deployed on Vercel and Cloudflare Workers.",
-    deployedUrl: "https://blog-7ytpfq9wi-ekasatwal7.vercel.app/",
-    githubUrl: "https://github.com/ekas-7/Blog-It",
-    youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", // Add your actual YouTube demo
-    imageUrl: "/pbx1.jpg", // Add your project screenshot
-    technologies: ["Next.js", "TypeScript", "Prisma", "PostgreSQL", "Cloudflare Workers"]
+    title: "Echonet",
+    description: "A DePIN that rewards providers of validated, real-world sound data with on-chain crypto.",
+    deployedUrl: "https://echonet.live/",
+    githubUrl: "https://github.com/Saurabh-0312/ECHONET",
+    youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    imageUrl: "/wallpaper10.jpg",
+    technologies: ["DePIN", "Web3", "Edge Data"]
+  },
+  {
+    title: "Dev Mux",
+    description: "A collaboration platform featuring video calls, code editing, and a whiteboard with real-time sync via LiveKit and CodeSandbox.",
+    deployedUrl: "https://github.com/ekas-7/Dev-Mux",
+    githubUrl: "https://github.com/ekas-7/Dev-Mux",
+    youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    imageUrl: "/wallpaper8.jpg",
+    technologies: ["Prisma", "PostgreSQL", "Node.js", "LiveKit"]
+  },
+  {
+    title: "MAC-OS Themed Portfolio",
+    description: "A sleek, modern portfolio website with a macOS-inspired theme showcasing projects, skills, and work — built with Next.js.",
+    deployedUrl: "https://www.ekas.site/",
+    githubUrl: "https://github.com/ekas-7/MAC-OS-Themed-Portfolio",
+    youtubeUrl: "",
+    imageUrl: "/mockinbird.jpg",
+    technologies: ["Next.js", "TypeScript", "Tailwind CSS"]
+  },
+  {
+    title: "Agamify",
+    description: "An intelligent agent that migrates web application code across multiple frontend frameworks, streamlining cross-framework development and modernization workflows.",
+    deployedUrl: "https://agamify.site/",
+    githubUrl: "https://github.com/ekas-7/Agamify",
+    youtubeUrl: "",
+    imageUrl: "/wallpaper5.jpg",
+    technologies: ["Agent", "Code Migration", "Frontend"]
+  },
+  {
+    title: "Zing Guru",
+    description: "An AI-powered learning ecosystem providing study paths, gamified modules, and 24/7 AI support (RAG-powered).",
+    deployedUrl: "https://github.com/ekas-7/Zing-Guru",
+    githubUrl: "https://github.com/ekas-7/Zing-Guru",
+    youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    imageUrl: "/wallpaper9.jpg",
+    technologies: ["React", "Node.js", "LangChain", "OpenAI", "PostgreSQL"]
+  },
+  {
+    title: "Dhaniverse",
+    description: "A gamified 2D RPG that teaches financial literacy using real-life money simulations, chunked maps, and on-chain banking/leaderboards on ICP.",
+    deployedUrl: "https://github.com/ekas-7/Dhaniverse",
+    githubUrl: "https://github.com/ekas-7/Dhaniverse",
+    youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    imageUrl: "/wallpaper7.jpg",
+    technologies: ["React", "Phaser 3", "Deno", "MongoDB", "WebSockets"]
+  },
+  {
+    title: "Walmart Hackathon",
+    description: "A modern e-commerce frontend built for the Walmart Hackathon. Demonstrates a responsive, performant, and visually appealing shopping experience using React, Vite, and Tailwind CSS.",
+    deployedUrl: "",
+    githubUrl: "https://github.com/ekas-7/Walmart_hackathon",
+    youtubeUrl: "",
+    imageUrl: "/mockinbird.jpg",
+    technologies: ["React", "Vite", "Tailwind CSS"]
   },
   {
     title: "Aurea",
@@ -31,6 +84,15 @@ const initialProjects: Project[] = [
     youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", // Add your actual YouTube demo
     imageUrl: "/wallpaper2.jpg", // Add your project screenshot
     technologies: ["React", "Node.js", "Express", "MongoDB", "Machine Learning"]
+  },
+  {
+    title: "Skill Sensei",
+    description: "Skill Sensei is a modern, minimal web app that allows users to list skills they offer, request skills they want, and connect with others for mutually beneficial learning swaps. Built with Next.js 13+ App Router and TypeScript.",
+    deployedUrl: "",
+    githubUrl: "https://github.com/ekas-7/Skill-Sensai",
+    youtubeUrl: "",
+    imageUrl: "/mockinbird.jpg",
+    technologies: ["Next.js", "TypeScript", "App Router"]
   },
   {
     title: "Chat-App",
@@ -51,6 +113,15 @@ const initialProjects: Project[] = [
     technologies: ["Node.js", "CLI", "NPM", "JavaScript"]
   },
   {
+    title: "Web-based Wallet",
+    description: "A lightweight web-based cryptocurrency wallet demo built with Vite and React. Demonstrates wallet UI components and simple integrations (Ethereum & Solana) for experimentation and learning.",
+    deployedUrl: "https://web-based-wallet-seven.vercel.app/",
+    githubUrl: "https://github.com/ekas-7/Web-based-wallet",
+    youtubeUrl: "",
+    imageUrl: "/mockinbird.jpg",
+    technologies: ["Vite", "React", "Ethereum", "Solana", "Web3"]
+  },
+  {
     title: "Drishti",
     description: "Drishti is a software developed for a global psychological services startup to administer RIASEC and DISC tests",
     deployedUrl: "https://drishti-dnro.vercel.app/",
@@ -60,65 +131,27 @@ const initialProjects: Project[] = [
     technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Vercel"]
   },
   {
-    title: "Dhaniverse",
-    description: "A gamified 2D RPG that teaches financial literacy using real-life money simulations, chunked maps, and on-chain banking/leaderboards on ICP.",
-    deployedUrl: "https://github.com/ekas-7/Dhaniverse",
-    githubUrl: "https://github.com/ekas-7/Dhaniverse",
-    youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-    imageUrl: "/wallpaper7.jpg",
-    technologies: ["React", "Phaser 3", "Deno", "MongoDB", "WebSockets"]
+    title: "Blog It",
+    description: "This is a blogging application inspired by Medium. The project is built from scratch using a modern tech stack and deployed on Vercel and Cloudflare Workers.",
+    deployedUrl: "https://blog-7ytpfq9wi-ekasatwal7.vercel.app/",
+    githubUrl: "https://github.com/ekas-7/Blog-It",
+    youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", // Add your actual YouTube demo
+    imageUrl: "/pbx1.jpg", // Add your project screenshot
+    technologies: ["Next.js", "TypeScript", "Prisma", "PostgreSQL", "Cloudflare Workers"]
   },
   {
-    title: "Dev Mux",
-    description: "A collaboration platform featuring video calls, code editing, and a whiteboard with real-time sync via LiveKit and CodeSandbox.",
-    deployedUrl: "https://github.com/ekas-7/Dev-Mux",
-    githubUrl: "https://github.com/ekas-7/Dev-Mux",
-    youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-    imageUrl: "/wallpaper8.jpg",
-    technologies: ["Prisma", "PostgreSQL", "Node.js", "LiveKit"]
-  },
-  {
-    title: "Zing Guru",
-    description: "An AI-powered learning ecosystem providing study paths, gamified modules, and 24/7 AI support (RAG-powered).",
-    deployedUrl: "https://github.com/ekas-7/Zing-Guru",
-    githubUrl: "https://github.com/ekas-7/Zing-Guru",
-    youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-    imageUrl: "/wallpaper9.jpg",
-    technologies: ["React", "Node.js", "LangChain", "OpenAI", "PostgreSQL"]
+    title: "Anemia Detection (Pi)",
+    description: "Personalized Anemia Detection Framework for custom hardware.",
+    deployedUrl: "",
+    githubUrl: "https://github.com/ekas-7/Anemia-detection-pi",
+    youtubeUrl: "",
+    imageUrl: "/wallpaper3.jpg",
+    technologies: ["Embedded", "Computer Vision", "Python"]
   },
 ];
 
 const Projects: React.FC = () => {
-  const [additionalProjects, setAdditionalProjects] = useState<Project[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchAdditionalProjects = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        // Simulate fetching additional projects
-        const fetchedProjects: Project[] = [
-          {
-            title: "Additional Project 1",
-            description: "A description for additional project 1.",
-            deployedUrl: "https://additionalproject1.example.com",
-            githubUrl: "https://github.com/username/additionalproject1",
-            technologies: ["React", "TypeScript"]
-          },
-        ];
-        setTimeout(() => setAdditionalProjects(fetchedProjects), 1000); // Simulated delay
-      } catch (err) {
-        setError('Failed to fetch additional projects');
-        console.log(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchAdditionalProjects();
-  }, []);
+  // removed additional projects fetching logic
 
   const renderProjects = (projects: Project[]) =>
     projects.map((project, index) => (
@@ -240,42 +273,6 @@ const Projects: React.FC = () => {
       {/* Main Projects Grid */}
       <div className="space-y-6 sm:space-y-8 mb-12 sm:mb-16">
         {renderProjects(initialProjects)}
-      </div>
-
-      {/* Additional Projects Section */}
-      <div className="border-t border-gray-200 dark:border-gray-700 pt-8 sm:pt-12">
-        <div className="text-center mb-6 sm:mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white mb-3 sm:mb-4">
-            More Projects
-          </h2>
-          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 px-4">
-            Additional projects and experiments
-          </p>
-        </div>
-
-        {isLoading && (
-          <div className="flex justify-center items-center py-8 sm:py-12">
-            <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-blue-600"></div>
-            <span className="ml-3 sm:ml-4 text-sm sm:text-base text-gray-600 dark:text-gray-300">Loading projects...</span>
-          </div>
-        )}
-        
-        {error && (
-          <div className="text-center py-6 sm:py-8 px-4">
-            <p className="text-red-500 bg-red-50 dark:bg-red-900/20 rounded-lg p-3 sm:p-4 inline-block text-sm sm:text-base">
-              {error}
-            </p>
-          </div>
-        )}
-        
-        <div className="space-y-6 sm:space-y-8">
-          {!isLoading && !error && renderProjects(additionalProjects)}
-        </div>
-      </div>
-
-      {/* GitHub Projects Component */}
-      <div className="border-t border-gray-200 dark:border-gray-700 pt-8 sm:pt-12">
-        <GitHubProjects username="ekas-7" />
       </div>
     </div>
   );
