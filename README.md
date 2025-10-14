@@ -103,9 +103,19 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📞 Contact
 
-Connect with me on X- [@Ekas_7](https://x.com/Ekas_7)
+Name: Ekaspreet Singh Atwal
 
-Project Link: [https://github.com/ekas-7/MAC-OS-Themed-Portfolio](https://github.com/ekas-7/MAC-OS-Themed-Portfolio)
+Email: ekaspreetatwal@gmail.com
+
+Mobile: +91-8872059425
+
+Portfolio: https://ekas.site
+
+GitHub: https://github.com/ekas-7
+
+LinkedIn: https://www.linkedin.com/in/ekas7
+
+Project Link: https://github.com/ekas-7/MAC-OS-Themed-Portfolio
 
 ## 🙏 Acknowledgments
 

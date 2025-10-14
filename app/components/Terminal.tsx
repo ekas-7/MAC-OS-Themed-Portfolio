@@ -87,7 +87,7 @@ const Terminal: React.FC = () => {
               break;
             
           case 'contact':
-            response = 'Email: ekasatwal.work@gmail.com | GitHub: github.com/ekas-7 | Twitter: @Ekas_7'
+            response = 'Email: ekaspreetatwal@gmail.com | Mobile: +91-8872059425 | GitHub: github.com/ekas-7 | LinkedIn: linkedin.com/in/ekas7 | Portfolio: ekas.site'
             break
           case 'game':
             if (!gameStarted) {

@@ -5,19 +5,20 @@ import {
   Instagram,
   Mail,
   ArrowRight,
+  ExternalLink,
 } from "lucide-react";
 
 const socialLinks = [
   {
     icon: <Github className="w-6 h-6" />,
     label: "GitHub",
-    url: "github.com/ekas-7",
+    url: "https://github.com/ekas-7",
     color: "hover:text-gray-800 dark:hover:text-gray-200",
   },
   {
     icon: <Linkedin className="w-6 h-6" />,
     label: "LinkedIn",
-    url: "linkedin.com/in/ekas7",
+    url: "https://www.linkedin.com/in/ekas7",
     color: "hover:text-gray-800 dark:hover:text-gray-200",
   },
   {
@@ -35,7 +36,13 @@ const socialLinks = [
   {
     icon: <Mail className="w-6 h-6" />,
     label: "Email",
-    url: "mailto:ekasatwal.work@gmail.com",
+    url: "mailto:ekaspreetatwal@gmail.com",
+    color: "hover:text-gray-800 dark:hover:text-gray-200",
+  },
+  {
+    icon: <ExternalLink className="w-6 h-6" />,
+    label: "Portfolio",
+    url: "https://ekas.site",
     color: "hover:text-gray-800 dark:hover:text-gray-200",
   },
 ];
@@ -53,9 +60,9 @@ const ConnectWithMe = () => {
           {socialLinks.map((link, index) => (
             <a
               key={index}
-              href={`https://${link.url}`}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={link.url.startsWith('http') || link.url.startsWith('mailto:') ? link.url : `https://${link.url}`}
+              target={link.url.startsWith('mailto:') ? undefined : '_blank'}
+              rel={link.url.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
               className={`flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-600 
                 transition-all duration-300 hover:shadow-md ${link.color}
                 bg-white dark:bg-gray-800 group hover:border-gray-300 dark:hover:border-gray-500`}

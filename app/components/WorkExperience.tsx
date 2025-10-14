@@ -10,17 +10,35 @@ const WorkExperience: React.FC = () => {
 
         <div className="space-y-6 text-gray-700 dark:text-gray-300">
           {/* Experience 1 */}
+
+          {/* Experience 1 */}
+          <div className="border-l-4 border-gray-300 dark:border-gray-600 pl-4">
+            <h4 className="font-semibold text-gray-800 dark:text-gray-200">
+              Prava Payments — Software Engineering Intern
+            </h4>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Aug 2025 – Present | Remote (USA)
+            </p>
+            <ul className="mt-2 list-disc list-inside space-y-1 text-sm">
+              <li>Built REST and GraphQL agentic endpoints for Shopify enabling CRUD operations, custom orders, and secure payment confirmations.</li>
+              <li>Containerized and deployed backend services and Shopify extensions to AWS (ECS, ECR, Aurora, CloudFront, S3, CloudWatch, EC2) using Terraform and Docker.</li>
+              <li>Implemented CI/CD pipelines and observability for production services.</li>
+              <li>Developed a Chrome extension integrating Prava APIs with ChatGPT and Perplexity for AI-agentic payments.</li>
+            </ul>
+          </div>
+
+          {/* Experience 2 */}
           <div className="border-l-4 border-gray-300 dark:border-gray-600 pl-4">
             <h4 className="font-semibold text-gray-800 dark:text-gray-200">
               Microsoft — Software Engineering Intern
             </h4>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Summer 2025 | Bangalore, India
+              June 2025 – Aug 2025 | Bangalore, India
             </p>
             <ul className="mt-2 list-disc list-inside space-y-1 text-sm">
-              <li>Automated static analysis for GPU code</li>
-              <li>Developed RAG-based workflows for developer productivity</li>
-              <li>Improved CI/CD pipelines for large-scale projects</li>
+              <li>Developed RAG-based workflows to automate PR generation for detecting and fixing nullptr dereferences and memory leaks in low-level GPU code.</li>
+              <li>Detected and resolved 90+ null pointer dereferences and 85+ memory leaks.</li>
+              <li>Integrated AI-generated unit tests into CI pipelines to improve coverage and build reliability.</li>
             </ul>
           </div>
 

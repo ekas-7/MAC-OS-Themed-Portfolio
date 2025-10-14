@@ -59,6 +59,33 @@ const initialProjects: Project[] = [
     imageUrl: "/wallpaper5.jpg", // Add your project screenshot
     technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Vercel"]
   },
+  {
+    title: "Dhaniverse",
+    description: "A gamified 2D RPG that teaches financial literacy using real-life money simulations, chunked maps, and on-chain banking/leaderboards on ICP.",
+    deployedUrl: "https://github.com/ekas-7/Dhaniverse",
+    githubUrl: "https://github.com/ekas-7/Dhaniverse",
+    youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    imageUrl: "/wallpaper7.jpg",
+    technologies: ["React", "Phaser 3", "Deno", "MongoDB", "WebSockets"]
+  },
+  {
+    title: "Dev Mux",
+    description: "A collaboration platform featuring video calls, code editing, and a whiteboard with real-time sync via LiveKit and CodeSandbox.",
+    deployedUrl: "https://github.com/ekas-7/Dev-Mux",
+    githubUrl: "https://github.com/ekas-7/Dev-Mux",
+    youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    imageUrl: "/wallpaper8.jpg",
+    technologies: ["Prisma", "PostgreSQL", "Node.js", "LiveKit"]
+  },
+  {
+    title: "Zing Guru",
+    description: "An AI-powered learning ecosystem providing study paths, gamified modules, and 24/7 AI support (RAG-powered).",
+    deployedUrl: "https://github.com/ekas-7/Zing-Guru",
+    githubUrl: "https://github.com/ekas-7/Zing-Guru",
+    youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    imageUrl: "/wallpaper9.jpg",
+    technologies: ["React", "Node.js", "LangChain", "OpenAI", "PostgreSQL"]
+  },
 ];
 
 const Projects: React.FC = () => {
