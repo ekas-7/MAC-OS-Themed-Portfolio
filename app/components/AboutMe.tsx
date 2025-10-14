@@ -147,7 +147,7 @@ const ProfileCard = () => {
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">4th Place — Fetch Track</p>
               </div>
               <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Fetch Integration</p>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">Developed innovative solution leveraging Fetch.ai's autonomous economic agents for decentralized data processing and AI coordination.</p>
+              <p className="text-xs text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">Developed innovative solution leveraging Fetch.ai&#39;s autonomous economic agents for decentralized data processing and AI coordination.</p>
               <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-700">
                 <span className="text-xs text-gray-500 dark:text-gray-400">Scale</span>
                 <span className="text-xs font-bold text-gray-700 dark:text-gray-300">Global Event</span>

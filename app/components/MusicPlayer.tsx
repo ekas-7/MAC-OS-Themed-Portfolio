@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import Image from 'next/image';
 import { Play, Pause, SkipBack, SkipForward, Volume2, Heart, Minimize2 } from "lucide-react";
 
 interface LocalTrack {
@@ -103,12 +104,12 @@ export default function FullScreenMusicPlayer() {
     <div className="fixed inset-0 text-gray-800 dark:text-white flex flex-col items-center justify-between p-4 sm:p-6 md:p-8 overflow-hidden">
       <div className="w-full max-w-md sm:max-w-lg md:max-w-xl flex flex-col items-center min-h-screen">
         <div className="relative w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 mb-4 sm:mb-6">
-          <img
+          <Image
             src={localTracks[currentTrack].albumArt}
             alt={localTracks[currentTrack].name}
-            width={256}
-            height={256}
-            className="w-full h-full object-cover rounded-xl shadow-2xl"
+            fill
+            sizes="(max-width: 640px) 12rem, (max-width: 768px) 14rem, 16rem"
+            className="object-cover rounded-xl shadow-2xl"
           />
           <button
             className={`absolute top-2 right-2 p-1.5 sm:p-2 rounded-full ${
