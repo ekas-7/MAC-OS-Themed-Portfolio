@@ -18,18 +18,18 @@ const initialProjects: Project[] = [
     description: "A DePIN that rewards providers of validated, real-world sound data with on-chain crypto.",
     deployedUrl: "https://echonet.live/",
     githubUrl: "https://github.com/Saurabh-0312/ECHONET",
-    youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-    imageUrl: "/wallpaper10.jpg",
-    technologies: ["DePIN", "Web3", "Edge Data"]
+    youtubeUrl: "https://youtu.be/0onUl0kPEDo",
+    imageUrl: "/Projects/echonet.png",
+    technologies: ["DePIN", "Web3","Devops", "Hardware","CI/CD", "Edge Data", "The Graph", "IPFS" ]
   },
   {
     title: "Dev Mux",
     description: "A collaboration platform featuring video calls, code editing, and a whiteboard with real-time sync via LiveKit and CodeSandbox.",
-    deployedUrl: "https://github.com/ekas-7/Dev-Mux",
+    deployedUrl: "https://www.devmux.xyz/",
     githubUrl: "https://github.com/ekas-7/Dev-Mux",
-    youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-    imageUrl: "/wallpaper8.jpg",
-    technologies: ["Prisma", "PostgreSQL", "Node.js", "LiveKit"]
+    youtubeUrl: "https://youtu.be/GfUFaTmD7oo",
+    imageUrl: "/Projects/devmux2.png",
+    technologies: ["Docker","Canvas","Prisma", "PostgreSQL", "Node.js", "LiveKit","Websockets","WebRTC"]
   },
   {
     title: "MAC-OS Themed Portfolio",
@@ -37,7 +37,7 @@ const initialProjects: Project[] = [
     deployedUrl: "https://www.ekas.site/",
     githubUrl: "https://github.com/ekas-7/MAC-OS-Themed-Portfolio",
     youtubeUrl: "",
-    imageUrl: "/mockinbird.jpg",
+    imageUrl: "/Projects/macos.png",
     technologies: ["Next.js", "TypeScript", "Tailwind CSS"]
   },
   {
@@ -45,53 +45,74 @@ const initialProjects: Project[] = [
     description: "An intelligent agent that migrates web application code across multiple frontend frameworks, streamlining cross-framework development and modernization workflows.",
     deployedUrl: "https://agamify.site/",
     githubUrl: "https://github.com/ekas-7/Agamify",
-    youtubeUrl: "",
-    imageUrl: "/wallpaper5.jpg",
-    technologies: ["Agent", "Code Migration", "Frontend"]
+    youtubeUrl: "https://youtu.be/wdHqQIuspdc",
+    imageUrl: "/Projects/agamify2.png",
+    technologies: ["Agent", "Code Migration", "Frontend", "RAG"]
   },
   {
     title: "Zing Guru",
     description: "An AI-powered learning ecosystem providing study paths, gamified modules, and 24/7 AI support (RAG-powered).",
-    deployedUrl: "https://github.com/ekas-7/Zing-Guru",
-    githubUrl: "https://github.com/ekas-7/Zing-Guru",
-    youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-    imageUrl: "/wallpaper9.jpg",
-    technologies: ["React", "Node.js", "LangChain", "OpenAI", "PostgreSQL"]
+    deployedUrl: "https://sage-zingguru.vercel.app/",
+    githubUrl: "https://github.com/ekas-7/sage-zingguru",
+    youtubeUrl: "https://youtu.be/tBbk4axjduw",
+    imageUrl: "/Projects/zingguru2.png",
+    technologies: ["React", "Node.js", "LangChain", "OpenAI", "PostgreSQL","RAG", "Blockchain", "Foundry"]
   },
   {
     title: "Dhaniverse",
     description: "A gamified 2D RPG that teaches financial literacy using real-life money simulations, chunked maps, and on-chain banking/leaderboards on ICP.",
-    deployedUrl: "https://github.com/ekas-7/Dhaniverse",
-    githubUrl: "https://github.com/ekas-7/Dhaniverse",
-    youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-    imageUrl: "/wallpaper7.jpg",
+    deployedUrl: "https://www.dhaniverse.in/",
+    githubUrl: "https://github.com/dhaniverse/dhaniverse",
+    youtubeUrl: "https://youtu.be/AhxIUaZny2k",
+    imageUrl: "/Projects/dhaniverse.png",
     technologies: ["React", "Phaser 3", "Deno", "MongoDB", "WebSockets"]
   },
   {
+    title: "Jiva",
+    description: "Jiva is an advanced healthcare tracking system designed to streamline your medical journey. Our comprehensive platform connects patients with healthcare providers through an intuitive interface that centralizes all your health information in one secure place.",
+    deployedUrl: "https://jiva-sage.vercel.app",
+    githubUrl: "https://github.com/itzzGaurav7/jiva-sage",
+    youtubeUrl: "https://youtu.be/0154CRk0VZU",
+    imageUrl: "/Projects/jiva.png",
+    technologies: [
+      "React",
+      "Tailwind CSS",
+      "MongoDB",
+      "AWS",
+      "Node.js",
+      "Flutter",
+      "FastAPI",
+      "RAG",
+      "Gemini",
+      "OpenAI",
+      "Smart Contracts"
+    ]
+  },
+  {
     title: "Walmart Hackathon",
-    description: "A modern e-commerce frontend built for the Walmart Hackathon. Demonstrates a responsive, performant, and visually appealing shopping experience using React, Vite, and Tailwind CSS.",
+    description: "A modern e-commerce extension built for the Walmart Hackathon. Demonstrates a responsive, performant, and visually appealing shopping experience using React, Vite, and Tailwind CSS in an agentic AI environment.",
     deployedUrl: "",
     githubUrl: "https://github.com/ekas-7/Walmart_hackathon",
-    youtubeUrl: "",
-    imageUrl: "/mockinbird.jpg",
-    technologies: ["React", "Vite", "Tailwind CSS"]
+    youtubeUrl: "https://youtu.be/ZY4vKH_Wx_o",
+    imageUrl: "/projects/sparkshop.png",
+    technologies: ["React", "Vite", "Tailwind CSS", "Node.js", "Express", "Vercel", "Agentic AI"]
   },
   {
     title: "Aurea",
     description: "Access to quality healthcare is a widespread issue. While urban areas have better facilities, people in small towns often lack access to specialists, leaving skin conditions undiagnosed or improperly treated, which can lead to a dip in self-worth and potential health risks.",
     deployedUrl: "https://noobz-1.onrender.com/",
     githubUrl: "https://github.com/ekas-7/Aurea",
-    youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", // Add your actual YouTube demo
-    imageUrl: "/wallpaper2.jpg", // Add your project screenshot
+    youtubeUrl: "https://youtu.be/4hEOXCBb89o", // Add your actual YouTube demo
+    imageUrl: "/projects/noobz.png", // Add your project screenshot
     technologies: ["React", "Node.js", "Express", "MongoDB", "Machine Learning"]
   },
   {
     title: "Skill Sensei",
     description: "Skill Sensei is a modern, minimal web app that allows users to list skills they offer, request skills they want, and connect with others for mutually beneficial learning swaps. Built with Next.js 13+ App Router and TypeScript.",
-    deployedUrl: "",
+    deployedUrl: "https://skill-sensai.vercel.app/",
     githubUrl: "https://github.com/ekas-7/Skill-Sensai",
-    youtubeUrl: "",
-    imageUrl: "/mockinbird.jpg",
+    youtubeUrl: "https://youtu.be/l--B2RSduJY",
+    imageUrl: "/Projects/skillssen.png",
     technologies: ["Next.js", "TypeScript", "App Router"]
   },
   {
@@ -99,8 +120,8 @@ const initialProjects: Project[] = [
     description: "Chat-App is a real-time messaging application that allows users to communicate instantly with each other. It provides a platform for seamless text-based conversations in a user-friendly interface.",
     deployedUrl: "https://github.com/ekas-7/Chat-App",
     githubUrl: "https://github.com/ekas-7/Chat-App",
-    youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", // Add your actual YouTube demo
-    imageUrl: "/wallpaper3.jpg", // Add your project screenshot
+    youtubeUrl: "", // Add your actual YouTube demo
+    imageUrl: "/Projects/chatapp.png", // Add your project screenshot
     technologies: ["React", "Socket.IO", "Node.js", "Express", "MongoDB"]
   },
   {
@@ -108,8 +129,8 @@ const initialProjects: Project[] = [
     description: "npx-ekas is a simple, yet powerful, personal CLI card built using Node.js. It serves as a digital business card that you can share quickly via the npx command.",
     deployedUrl: "https://www.npmjs.com/package/ekas",
     githubUrl: "https://github.com/ekas-7/npx-ekas",
-    youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", // Add your actual YouTube demo
-    imageUrl: "/wallpaper4.jpg", // Add your project screenshot
+    youtubeUrl: "", // Add your actual YouTube demo
+    imageUrl: "/Projects/npx2.png", // Add your project screenshot
     technologies: ["Node.js", "CLI", "NPM", "JavaScript"]
   },
   {
@@ -118,7 +139,7 @@ const initialProjects: Project[] = [
     deployedUrl: "https://web-based-wallet-seven.vercel.app/",
     githubUrl: "https://github.com/ekas-7/Web-based-wallet",
     youtubeUrl: "",
-    imageUrl: "/mockinbird.jpg",
+    imageUrl: "/projects/wallet.png",
     technologies: ["Vite", "React", "Ethereum", "Solana", "Web3"]
   },
   {
@@ -126,17 +147,17 @@ const initialProjects: Project[] = [
     description: "Drishti is a software developed for a global psychological services startup to administer RIASEC and DISC tests",
     deployedUrl: "https://drishti-dnro.vercel.app/",
     githubUrl: "https://github.com/ekas-7/Drishti",
-    youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", // Add your actual YouTube demo
+    youtubeUrl: "", // Add your actual YouTube demo
     imageUrl: "/wallpaper5.jpg", // Add your project screenshot
     technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Vercel"]
   },
   {
     title: "Blog It",
     description: "This is a blogging application inspired by Medium. The project is built from scratch using a modern tech stack and deployed on Vercel and Cloudflare Workers.",
-    deployedUrl: "https://blog-7ytpfq9wi-ekasatwal7.vercel.app/",
+    deployedUrl: "https://blog-it-frontend-gules.vercel.app/",
     githubUrl: "https://github.com/ekas-7/Blog-It",
-    youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", // Add your actual YouTube demo
-    imageUrl: "/pbx1.jpg", // Add your project screenshot
+    youtubeUrl: "", // Add your actual YouTube demo
+    imageUrl: "/Projects/blogit.png", // Add your project screenshot
     technologies: ["Next.js", "TypeScript", "Prisma", "PostgreSQL", "Cloudflare Workers"]
   },
   {

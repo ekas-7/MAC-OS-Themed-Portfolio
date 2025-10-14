@@ -64,6 +64,11 @@ export default function Dock({ toggleWindow }: DockProps) {
             group-hover:text-gray-900 dark:group-hover:text-white" />
         </DockItem>
 
+        <DockItem label="Work Experience" onClick={() => toggleWindow('work-experience')}>
+          <ClipboardList className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-gray-600/80 dark:text-white/80 
+            group-hover:text-gray-900 dark:group-hover:text-white" />
+        </DockItem>
+        
         <DockItem label="Projects" onClick={() => toggleWindow('projects')}>
           <Briefcase className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-gray-600/80 dark:text-white/80 
             group-hover:text-gray-900 dark:group-hover:text-white" />
@@ -96,11 +101,6 @@ export default function Dock({ toggleWindow }: DockProps) {
 
         <DockItem label="Resume" onClick={() => toggleWindow('resume')}>
           <File className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-gray-600/80 dark:text-white/80 
-            group-hover:text-gray-900 dark:group-hover:text-white" />
-        </DockItem>
-
-        <DockItem label="Work Experience" onClick={() => toggleWindow('work-experience')}>
-          <ClipboardList className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-gray-600/80 dark:text-white/80 
             group-hover:text-gray-900 dark:group-hover:text-white" />
         </DockItem>
 
