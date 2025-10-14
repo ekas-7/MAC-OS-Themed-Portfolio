@@ -107,13 +107,13 @@ Name: Ekaspreet Singh Atwal
 
 Email: ekaspreetatwal@gmail.com
 
-Mobile: +91-8872059425
+<!-- Phone number removed at user's request -->
 
 Portfolio: https://ekas.site
 
 GitHub: https://github.com/ekas-7
 
-LinkedIn: https://www.linkedin.com/in/ekas7
+LinkedIn: https://www.linkedin.com/in/ekaspreet-singh-atwal-b7570b269
 
 Project Link: https://github.com/ekas-7/MAC-OS-Themed-Portfolio
 

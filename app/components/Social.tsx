@@ -18,7 +18,7 @@ const socialLinks = [
   {
     icon: <Linkedin className="w-6 h-6" />,
     label: "LinkedIn",
-    url: "https://www.linkedin.com/in/ekas7",
+  url: "https://www.linkedin.com/in/ekaspreet-singh-atwal-b7570b269",
     color: "hover:text-gray-800 dark:hover:text-gray-200",
   },
   {
