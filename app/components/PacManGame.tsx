@@ -458,11 +458,6 @@ const FlappyBird: React.FC = () => {
                     {highScore}
                   </p>
                 </div>
-                {score === highScore && score > 0 && (
-                  <div className="mt-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-2 rounded-full text-sm font-bold animate-pulse">
-                    New High Score!
-                  </div>
-                )}
               </div>
               <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-8 py-3 rounded-full font-bold text-lg shadow-lg inline-block hover:bg-gray-100 dark:hover:bg-gray-700 transition-all cursor-pointer">
                 Click to Restart
