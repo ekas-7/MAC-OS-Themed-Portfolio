@@ -1,503 +1,283 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 
-interface GameState {
-  score: number;
-  lives: number;
-  gameOver: boolean;
-  paused: boolean;
-  level: number;
-  dotsEaten: number;
-  totalDots: number;
-  powerMode: boolean;
-  powerModeTimer: number;
-}
-
-interface Position {
+interface Bird {
   x: number;
   y: number;
+  velocity: number;
 }
 
-interface Ghost {
-  id: number;
-  position: Position;
-  direction: Position;
-  color: string;
-  mode: 'chase' | 'scatter' | 'frightened';
-  frightendTime: number;
-  startPosition: Position;
+interface Pipe {
+  x: number;
+  topHeight: number;
+  bottomHeight: number;
+  passed: boolean;
 }
 
-// Game maze layout (1 = wall, 0 = dot, 2 = power pellet, 3 = empty)
-const MAZE = [
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-  [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
-  [1,2,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,2,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,0,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,0,1],
-  [1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1],
-  [1,1,1,1,0,1,1,1,3,1,3,1,1,1,0,1,1,1,1],
-  [3,3,3,1,0,1,3,3,3,3,3,3,3,1,0,1,3,3,3],
-  [1,1,1,1,0,1,3,1,1,3,1,1,3,1,0,1,1,1,1],
-  [3,3,3,3,0,3,3,1,3,3,3,1,3,3,0,3,3,3,3],
-  [1,1,1,1,0,1,3,1,1,1,1,1,3,1,0,1,1,1,1],
-  [3,3,3,1,0,1,3,3,3,3,3,3,3,1,0,1,3,3,3],
-  [1,1,1,1,0,1,1,1,3,1,3,1,1,1,0,1,1,1,1],
-  [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
-  [1,0,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,0,1],
-  [1,2,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,2,1],
-  [1,1,0,1,0,1,0,1,1,1,1,1,0,1,0,1,0,1,1],
-  [1,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1],
-  [1,0,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,0,1],
-  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-];
-
-const CELL_SIZE = 20;
-const GAME_WIDTH = MAZE[0].length * CELL_SIZE;
-const GAME_HEIGHT = MAZE.length * CELL_SIZE;
-
-export default function PacManGame() {
-  const [gameState, setGameState] = useState<GameState>({
+const FlappyBird: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [gameState, setGameState] = useState<'menu' | 'playing' | 'gameOver'>('menu');
+  const [score, setScore] = useState(0);
+  const [highScore, setHighScore] = useState(0);
+  const [bird, setBird] = useState<Bird>({ x: 100, y: 200, velocity: 0 });
+  const [pipes, setPipes] = useState<Pipe[]>([]);
+  
+  const gameRef = useRef({
+    bird: { x: 100, y: 200, velocity: 0 },
+    pipes: [] as Pipe[],
     score: 0,
-    lives: 3,
-    gameOver: false,
-    paused: false,
-    level: 1,
-    dotsEaten: 0,
-    totalDots: 0,
-    powerMode: false,
-    powerModeTimer: 0
+    gameState: 'menu' as 'menu' | 'playing' | 'gameOver'
   });
 
-  const [pacmanPos, setPacmanPos] = useState<Position>({ x: 9, y: 15 });
-  const [pacmanDirection, setPacmanDirection] = useState<Position>({ x: 0, y: 0 });
-  const [nextDirection, setNextDirection] = useState<Position>({ x: 0, y: 0 });
-  const [ghosts, setGhosts] = useState<Ghost[]>([]);
-  const [maze, setMaze] = useState(MAZE.map(row => [...row]));
+  // Game constants
+  const CANVAS_WIDTH = 400;
+  const CANVAS_HEIGHT = 400;
+  const BIRD_SIZE = 20;
+  const PIPE_WIDTH = 50;
+  const PIPE_GAP = 120;
+  const GRAVITY = 0.6;
+  const JUMP_FORCE = -10;
+  const PIPE_SPEED = 2;
 
-  // Initialize game
+  // Load high score from localStorage
   useEffect(() => {
-    const totalDots = MAZE.flat().filter(cell => cell === 0 || cell === 2).length;
-    setGameState(prev => ({ ...prev, totalDots }));
-    
-    // Initialize ghosts
-    const initialGhosts: Ghost[] = [
-      { id: 1, position: { x: 9, y: 9 }, direction: { x: 0, y: -1 }, color: '#FF0000', mode: 'scatter', frightendTime: 0, startPosition: { x: 9, y: 9 } },
-      { id: 2, position: { x: 8, y: 9 }, direction: { x: 0, y: -1 }, color: '#FFB8FF', mode: 'scatter', frightendTime: 0, startPosition: { x: 8, y: 9 } },
-      { id: 3, position: { x: 10, y: 9 }, direction: { x: 0, y: -1 }, color: '#00FFFF', mode: 'scatter', frightendTime: 0, startPosition: { x: 10, y: 9 } },
-      { id: 4, position: { x: 9, y: 8 }, direction: { x: 0, y: -1 }, color: '#FFB852', mode: 'scatter', frightendTime: 0, startPosition: { x: 9, y: 8 } }
-    ];
-    setGhosts(initialGhosts);
-  }, []);
-
-  // Keyboard controls
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      switch (event.code) {
-        case 'ArrowUp':
-        case 'KeyW':
-          setNextDirection({ x: 0, y: -1 });
-          event.preventDefault();
-          break;
-        case 'ArrowDown':
-        case 'KeyS':
-          setNextDirection({ x: 0, y: 1 });
-          event.preventDefault();
-          break;
-        case 'ArrowLeft':
-        case 'KeyA':
-          setNextDirection({ x: -1, y: 0 });
-          event.preventDefault();
-          break;
-        case 'ArrowRight':
-        case 'KeyD':
-          setNextDirection({ x: 1, y: 0 });
-          event.preventDefault();
-          break;
-        case 'KeyP':
-          setGameState(prev => ({ ...prev, paused: !prev.paused }));
-          break;
-      }
-    };
-
-    const handleKeyUp = () => {
-      // Key up handling if needed
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
-    };
-  }, []);
-
-  // Check if movement is valid
-  const isValidMove = useCallback((x: number, y: number): boolean => {
-    if (x < 0 || x >= MAZE[0].length || y < 0 || y >= MAZE.length) {
-      return false;
+    const savedHighScore = localStorage.getItem('flappyBirdHighScore');
+    if (savedHighScore) {
+      setHighScore(parseInt(savedHighScore));
     }
-    return MAZE[y][x] !== 1;
   }, []);
+
+  // Save high score to localStorage
+  useEffect(() => {
+    if (score > highScore) {
+      setHighScore(score);
+      localStorage.setItem('flappyBirdHighScore', score.toString());
+    }
+  }, [score, highScore]);
+
+  const resetGame = useCallback(() => {
+    const newBird = { x: 100, y: 200, velocity: 0 };
+    setBird(newBird);
+    setPipes([]);
+    setScore(0);
+    gameRef.current = {
+      bird: newBird,
+      pipes: [],
+      score: 0,
+      gameState: 'playing'
+    };
+  }, []);
+
+  const jump = useCallback(() => {
+    if (gameRef.current.gameState === 'playing') {
+      gameRef.current.bird.velocity = JUMP_FORCE;
+      setBird(prev => ({ ...prev, velocity: JUMP_FORCE }));
+    } else if (gameRef.current.gameState === 'menu') {
+      resetGame();
+      setGameState('playing');
+    } else if (gameRef.current.gameState === 'gameOver') {
+      resetGame();
+      setGameState('playing');
+    }
+  }, [resetGame]);
+
+  const checkCollision = useCallback((bird: Bird, pipes: Pipe[]): boolean => {
+    // Check ground and ceiling collision
+    if (bird.y + BIRD_SIZE >= CANVAS_HEIGHT || bird.y <= 0) {
+      return true;
+    }
+
+    // Check pipe collision
+    for (const pipe of pipes) {
+      if (
+        bird.x + BIRD_SIZE > pipe.x &&
+        bird.x < pipe.x + PIPE_WIDTH &&
+        (bird.y < pipe.topHeight || bird.y + BIRD_SIZE > CANVAS_HEIGHT - pipe.bottomHeight)
+      ) {
+        return true;
+      }
+    }
+
+    return false;
+  }, []);
+
+  const generatePipe = useCallback((): Pipe => {
+    const topHeight = Math.random() * (CANVAS_HEIGHT - PIPE_GAP - 100) + 50;
+    const bottomHeight = CANVAS_HEIGHT - topHeight - PIPE_GAP;
+    return {
+      x: CANVAS_WIDTH,
+      topHeight,
+      bottomHeight,
+      passed: false
+    };
+  }, []);
+
+  const gameLoop = useCallback(() => {
+    if (gameRef.current.gameState !== 'playing') return;
+
+    // Update bird physics
+    gameRef.current.bird.velocity += GRAVITY;
+    gameRef.current.bird.y += gameRef.current.bird.velocity;
+
+    // Update pipes
+    gameRef.current.pipes = gameRef.current.pipes.map(pipe => ({
+      ...pipe,
+      x: pipe.x - PIPE_SPEED
+    }));
+
+    // Remove off-screen pipes
+    gameRef.current.pipes = gameRef.current.pipes.filter(pipe => pipe.x + PIPE_WIDTH > 0);
+
+    // Add new pipes
+    if (gameRef.current.pipes.length === 0 || gameRef.current.pipes[gameRef.current.pipes.length - 1].x < CANVAS_WIDTH - 200) {
+      gameRef.current.pipes.push(generatePipe());
+    }
+
+    // Update score
+    gameRef.current.pipes.forEach(pipe => {
+      if (!pipe.passed && pipe.x + PIPE_WIDTH < gameRef.current.bird.x) {
+        pipe.passed = true;
+        gameRef.current.score++;
+      }
+    });
+
+    // Check collision
+    if (checkCollision(gameRef.current.bird, gameRef.current.pipes)) {
+      gameRef.current.gameState = 'gameOver';
+      setGameState('gameOver');
+    }
+
+    // Update state
+    setBird({ ...gameRef.current.bird });
+    setPipes([...gameRef.current.pipes]);
+    setScore(gameRef.current.score);
+  }, [checkCollision, generatePipe]);
 
   // Game loop
   useEffect(() => {
-    if (gameState.gameOver || gameState.paused) return;
+    const interval = setInterval(gameLoop, 16); // ~60 FPS
+    return () => clearInterval(interval);
+  }, [gameLoop]);
 
-    const gameInterval = setInterval(() => {
-      // Update Pac-Man position
-      setPacmanPos(prevPos => {
-        const newPos = { ...prevPos };
-        
-        // Try to change direction if next direction is different and valid
-        if (nextDirection.x !== pacmanDirection.x || nextDirection.y !== pacmanDirection.y) {
-          const testX = prevPos.x + nextDirection.x;
-          const testY = prevPos.y + nextDirection.y;
-          if (isValidMove(testX, testY)) {
-            setPacmanDirection(nextDirection);
-            newPos.x = testX;
-            newPos.y = testY;
-          } else {
-            // Continue in current direction if possible
-            const currentX = prevPos.x + pacmanDirection.x;
-            const currentY = prevPos.y + pacmanDirection.y;
-            if (isValidMove(currentX, currentY)) {
-              newPos.x = currentX;
-              newPos.y = currentY;
-            }
-          }
-        } else {
-          // Continue in current direction
-          const newX = prevPos.x + pacmanDirection.x;
-          const newY = prevPos.y + pacmanDirection.y;
-          if (isValidMove(newX, newY)) {
-            newPos.x = newX;
-            newPos.y = newY;
-          }
-        }
-
-        // Tunnel effect (wrap around)
-        if (newPos.x < 0) newPos.x = MAZE[0].length - 1;
-        if (newPos.x >= MAZE[0].length) newPos.x = 0;
-
-        return newPos;
-      });
-
-      // Update power mode timer
-      if (gameState.powerMode && gameState.powerModeTimer > 0) {
-        setGameState(prev => ({
-          ...prev,
-          powerModeTimer: prev.powerModeTimer - 1,
-          powerMode: prev.powerModeTimer > 1
-        }));
-      }
-
-      // Update ghosts
-      setGhosts(prevGhosts => 
-        prevGhosts.map(ghost => {
-          const directions = [
-            { x: 0, y: -1 }, // up
-            { x: 0, y: 1 },  // down
-            { x: -1, y: 0 }, // left
-            { x: 1, y: 0 }   // right
-          ];
-
-          // Simple AI: choose random valid direction, prefer moving toward Pac-Man
-          const validDirections = directions.filter(dir => 
-            isValidMove(ghost.position.x + dir.x, ghost.position.y + dir.y)
-          );
-
-          let newDirection = ghost.direction;
-          if (validDirections.length > 0) {
-            if (gameState.powerMode) {
-              // Run away from Pac-Man when frightened
-              const awayDirections = validDirections.filter(dir => {
-                const newX = ghost.position.x + dir.x;
-                const newY = ghost.position.y + dir.y;
-                const distToPacman = Math.abs(newX - pacmanPos.x) + Math.abs(newY - pacmanPos.y);
-                const currentDist = Math.abs(ghost.position.x - pacmanPos.x) + Math.abs(ghost.position.y - pacmanPos.y);
-                return distToPacman > currentDist;
-              });
-              newDirection = awayDirections.length > 0 
-                ? awayDirections[Math.floor(Math.random() * awayDirections.length)]
-                : validDirections[Math.floor(Math.random() * validDirections.length)];
-            } else {
-              // Chase Pac-Man
-              const chaseDirections = validDirections.filter(dir => {
-                const newX = ghost.position.x + dir.x;
-                const newY = ghost.position.y + dir.y;
-                const distToPacman = Math.abs(newX - pacmanPos.x) + Math.abs(newY - pacmanPos.y);
-                const currentDist = Math.abs(ghost.position.x - pacmanPos.x) + Math.abs(ghost.position.y - pacmanPos.y);
-                return distToPacman < currentDist;
-              });
-              newDirection = chaseDirections.length > 0 
-                ? chaseDirections[Math.floor(Math.random() * chaseDirections.length)]
-                : validDirections[Math.floor(Math.random() * validDirections.length)];
-            }
-          }
-
-          const newX = ghost.position.x + newDirection.x;
-          const newY = ghost.position.y + newDirection.y;
-
-          return {
-            ...ghost,
-            position: { x: newX, y: newY },
-            direction: newDirection,
-            mode: gameState.powerMode ? 'frightened' : 'chase'
-          };
-        })
-      );
-
-    }, 200); // Game speed
-
-    return () => clearInterval(gameInterval);
-  }, [gameState.gameOver, gameState.paused, gameState.powerMode, gameState.powerModeTimer, pacmanDirection, nextDirection, pacmanPos, isValidMove]);
-
-  // Check for collisions and eating dots
+  // Draw game
   useEffect(() => {
-    const currentCell = maze[pacmanPos.y]?.[pacmanPos.x];
-    
-    if (currentCell === 0) {
-      // Eat normal dot
-      setMaze(prev => {
-        const newMaze = prev.map(row => [...row]);
-        newMaze[pacmanPos.y][pacmanPos.x] = 3;
-        return newMaze;
-      });
-      setGameState(prev => ({
-        ...prev,
-        score: prev.score + 10,
-        dotsEaten: prev.dotsEaten + 1
-      }));
-    } else if (currentCell === 2) {
-      // Eat power pellet
-      setMaze(prev => {
-        const newMaze = prev.map(row => [...row]);
-        newMaze[pacmanPos.y][pacmanPos.x] = 3;
-        return newMaze;
-      });
-      setGameState(prev => ({
-        ...prev,
-        score: prev.score + 50,
-        dotsEaten: prev.dotsEaten + 1,
-        powerMode: true,
-        powerModeTimer: 30 // 6 seconds at 200ms intervals
-      }));
-    }
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-    // Check ghost collisions
-    ghosts.forEach(ghost => {
-      if (ghost.position.x === pacmanPos.x && ghost.position.y === pacmanPos.y) {
-        if (gameState.powerMode) {
-          // Eat ghost
-          setGameState(prev => ({ ...prev, score: prev.score + 200 }));
-          // Reset ghost to start position (simplified)
-          setGhosts(prevGhosts => 
-            prevGhosts.map(g => 
-              g.id === ghost.id 
-                ? { ...g, position: { ...g.startPosition } }
-                : g
-            )
-          );
-        } else {
-          // Pac-Man dies
-          setGameState(prev => {
-            const newLives = prev.lives - 1;
-            return {
-              ...prev,
-              lives: newLives,
-              gameOver: newLives <= 0
-            };
-          });
-          if (gameState.lives > 1) {
-            setPacmanPos({ x: 9, y: 15 });
-            setPacmanDirection({ x: 0, y: 0 });
-            setNextDirection({ x: 0, y: 0 });
-          }
-        }
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Clear canvas
+    ctx.fillStyle = '#87CEEB'; // Sky blue background
+    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    // Draw clouds
+    ctx.fillStyle = 'white';
+    ctx.globalAlpha = 0.8;
+    for (let i = 0; i < 3; i++) {
+      const x = (i * 150 + Date.now() * 0.01) % (CANVAS_WIDTH + 60) - 60;
+      ctx.beginPath();
+      ctx.arc(x, 60 + i * 40, 25, 0, Math.PI * 2);
+      ctx.arc(x + 25, 60 + i * 40, 35, 0, Math.PI * 2);
+      ctx.arc(x + 50, 60 + i * 40, 25, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    if (gameState === 'playing' || gameState === 'gameOver') {
+      // Draw pipes
+      ctx.fillStyle = '#228B22'; // Forest green
+      pipes.forEach(pipe => {
+        // Top pipe
+        ctx.fillRect(pipe.x, 0, PIPE_WIDTH, pipe.topHeight);
+        // Bottom pipe
+        ctx.fillRect(pipe.x, CANVAS_HEIGHT - pipe.bottomHeight, PIPE_WIDTH, pipe.bottomHeight);
+        
+        // Pipe caps
+        ctx.fillStyle = '#32CD32'; // Lime green
+        ctx.fillRect(pipe.x - 5, pipe.topHeight - 20, PIPE_WIDTH + 10, 20);
+        ctx.fillRect(pipe.x - 5, CANVAS_HEIGHT - pipe.bottomHeight, PIPE_WIDTH + 10, 20);
+        ctx.fillStyle = '#228B22';
+      });
+
+      // Draw bird
+      ctx.fillStyle = '#FFD700'; // Gold
+      ctx.fillRect(bird.x, bird.y, BIRD_SIZE, BIRD_SIZE);
+      
+      // Bird eye
+      ctx.fillStyle = 'black';
+      ctx.fillRect(bird.x + BIRD_SIZE - 8, bird.y + 4, 4, 4);
+      
+      // Bird beak
+      ctx.fillStyle = '#FF4500'; // Orange red
+      ctx.fillRect(bird.x + BIRD_SIZE, bird.y + 8, 6, 4);
+
+      // Draw score
+      ctx.fillStyle = 'white';
+      ctx.strokeStyle = 'black';
+      ctx.lineWidth = 2;
+      ctx.font = 'bold 24px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.strokeText(score.toString(), CANVAS_WIDTH / 2, 40);
+      ctx.fillText(score.toString(), CANVAS_WIDTH / 2, 40);
+    }
+  }, [bird, pipes, gameState, score]);
+
+  // Keyboard controls
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.code === 'Space' || e.key === ' ') {
+        e.preventDefault();
+        jump();
       }
-    });
+    };
 
-    // Check win condition
-    if (gameState.dotsEaten >= gameState.totalDots) {
-      setGameState(prev => ({
-        ...prev,
-        level: prev.level + 1,
-        dotsEaten: 0
-      }));
-      // Reset maze and positions for next level
-      setMaze(MAZE.map(row => [...row]));
-      setPacmanPos({ x: 9, y: 15 });
-      setPacmanDirection({ x: 0, y: 0 });
-      setNextDirection({ x: 0, y: 0 });
-    }
-  }, [pacmanPos, ghosts, gameState.powerMode, gameState.lives, gameState.dotsEaten, gameState.totalDots, maze]);
-
-  const resetGame = () => {
-    setGameState({
-      score: 0,
-      lives: 3,
-      gameOver: false,
-      paused: false,
-      level: 1,
-      dotsEaten: 0,
-      totalDots: MAZE.flat().filter(cell => cell === 0 || cell === 2).length,
-      powerMode: false,
-      powerModeTimer: 0
-    });
-    setMaze(MAZE.map(row => [...row]));
-    setPacmanPos({ x: 9, y: 15 });
-    setPacmanDirection({ x: 0, y: 0 });
-    setNextDirection({ x: 0, y: 0 });
-    setGhosts([
-      { id: 1, position: { x: 9, y: 9 }, direction: { x: 0, y: -1 }, color: '#FF0000', mode: 'scatter', frightendTime: 0, startPosition: { x: 9, y: 9 } },
-      { id: 2, position: { x: 8, y: 9 }, direction: { x: 0, y: -1 }, color: '#FFB8FF', mode: 'scatter', frightendTime: 0, startPosition: { x: 8, y: 9 } },
-      { id: 3, position: { x: 10, y: 9 }, direction: { x: 0, y: -1 }, color: '#00FFFF', mode: 'scatter', frightendTime: 0, startPosition: { x: 10, y: 9 } },
-      { id: 4, position: { x: 9, y: 8 }, direction: { x: 0, y: -1 }, color: '#FFB852', mode: 'scatter', frightendTime: 0, startPosition: { x: 9, y: 8 } }
-    ]);
-  };
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [jump]);
 
   return (
-    <div className="w-full h-full bg-black flex flex-col items-center justify-center p-4">
-      {/* Game Board */}
-      <div 
-        className="relative border-2 border-blue-500"
-        style={{ 
-          width: GAME_WIDTH, 
-          height: GAME_HEIGHT,
-          backgroundColor: '#000080'
-        }}
-      >
-        {/* Render Maze */}
-        {maze.map((row, y) =>
-          row.map((cell, x) => (
-            <div
-              key={`${x}-${y}`}
-              className="absolute"
-              style={{
-                left: x * CELL_SIZE,
-                top: y * CELL_SIZE,
-                width: CELL_SIZE,
-                height: CELL_SIZE,
-              }}
-            >
-              {cell === 1 && (
-                <div className="w-full h-full bg-blue-600 border border-blue-400" />
-              )}
-              {cell === 0 && (
-                <div className="w-full h-full flex items-center justify-center">
-                  <div className="w-1 h-1 bg-yellow-300 rounded-full" />
-                </div>
-              )}
-              {cell === 2 && (
-                <div className="w-full h-full flex items-center justify-center">
-                  <div className="w-3 h-3 bg-yellow-300 rounded-full animate-pulse" />
-                </div>
-              )}
-            </div>
-          ))
-        )}
-
-        {/* Pac-Man */}
-        <div
-          className="absolute transition-all duration-200 flex items-center justify-center"
-          style={{
-            left: pacmanPos.x * CELL_SIZE,
-            top: pacmanPos.y * CELL_SIZE,
-            width: CELL_SIZE,
-            height: CELL_SIZE,
-            transform: `rotate(${
-              pacmanDirection.x === 1 ? '0deg' :
-              pacmanDirection.x === -1 ? '180deg' :
-              pacmanDirection.y === 1 ? '90deg' :
-              pacmanDirection.y === -1 ? '-90deg' : '0deg'
-            })`
-          }}
-        >
-          <div className="w-4 h-4 bg-yellow-400 rounded-full relative">
-            <div 
-              className="absolute w-0 h-0 border-l-2 border-r-2 border-b-2 border-transparent border-l-black"
-              style={{
-                right: '2px',
-                top: '50%',
-                transform: 'translateY(-50%)'
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Ghosts */}
-        {ghosts.map(ghost => (
-          <div
-            key={ghost.id}
-            className="absolute transition-all duration-200 flex items-center justify-center"
-            style={{
-              left: ghost.position.x * CELL_SIZE,
-              top: ghost.position.y * CELL_SIZE,
-              width: CELL_SIZE,
-              height: CELL_SIZE,
-            }}
-          >
-            <div 
-              className="w-4 h-4 rounded-t-full relative"
-              style={{
-                backgroundColor: gameState.powerMode ? '#0000FF' : ghost.color
-              }}
-            >
-              <div className="absolute bottom-0 left-0 w-full h-1 flex">
-                <div className="w-1 h-1 bg-current rounded-b-full" />
-                <div className="w-1 h-1 bg-transparent" />
-                <div className="w-1 h-1 bg-current rounded-b-full" />
-                <div className="w-1 h-1 bg-transparent" />
-              </div>
-              {/* Ghost eyes */}
-              <div className="absolute top-1 left-1 w-1 h-1 bg-white rounded-full" />
-              <div className="absolute top-1 right-1 w-1 h-1 bg-white rounded-full" />
-            </div>
-          </div>
-        ))}
-
-        {/* Game Over Overlay */}
-        {gameState.gameOver && (
-          <div className="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center">
-            <div className="text-center">
-              <div className="text-yellow-400 text-2xl font-bold mb-2">GAME OVER</div>
-              <div className="text-white text-lg mb-2">Final Score: {gameState.score}</div>
-              <button
-                onClick={resetGame}
-                className="bg-yellow-400 text-black px-4 py-2 rounded font-bold hover:bg-yellow-300"
-              >
-                Play Again
-              </button>
+    <div className="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 min-h-full">
+      <div className="relative">
+        <canvas
+          ref={canvasRef}
+          width={CANVAS_WIDTH}
+          height={CANVAS_HEIGHT}
+          onClick={jump}
+          className="border-2 border-gray-300 dark:border-gray-600 rounded-lg shadow-lg cursor-pointer bg-sky-200"
+        />
+        
+        {gameState === 'menu' && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 rounded-lg">
+            <h1 className="text-4xl font-bold text-white mb-4 font-mono">Flappy Bird</h1>
+            <p className="text-white text-lg mb-4">Click or press Space to start</p>
+            <div className="text-white text-sm">
+              <p>High Score: {highScore}</p>
             </div>
           </div>
         )}
-
-        {/* Paused Overlay */}
-        {gameState.paused && (
-          <div className="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center">
-            <div className="text-yellow-400 text-2xl font-bold">PAUSED</div>
+        
+        {gameState === 'gameOver' && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-75 rounded-lg">
+            <h2 className="text-3xl font-bold text-white mb-2">Game Over!</h2>
+            <p className="text-white text-xl mb-2">Score: {score}</p>
+            <p className="text-white text-lg mb-4">High Score: {highScore}</p>
+            <p className="text-white text-sm">Click or press Space to restart</p>
           </div>
         )}
       </div>
-
-      {/* Game Info */}
-      <div className="mt-4 text-white text-center">
-        <div className="flex gap-6 mb-2">
-          <span>Score: {gameState.score}</span>
-          <span>Lives: {gameState.lives}</span>
-          <span>Level: {gameState.level}</span>
-          {gameState.powerMode && (
-            <span className="text-yellow-400 animate-pulse">POWER MODE!</span>
-          )}
-        </div>
-        <div className="text-sm text-gray-300">
-          Use WASD or Arrow Keys to move • P to pause
-        </div>
+      
+      <div className="mt-4 text-center">
+        <p className="text-gray-600 dark:text-gray-400 text-sm">
+          Click the game area or press Space to jump
+        </p>
+        <p className="text-gray-500 dark:text-gray-500 text-xs mt-1">
+          Avoid the pipes and try to get the highest score!
+        </p>
       </div>
     </div>
   );
-}
+};
+
+export default FlappyBird;

@@ -104,7 +104,7 @@ export default function Dock({ toggleWindow }: DockProps) {
             group-hover:text-gray-900 dark:group-hover:text-white" />
         </DockItem>
 
-        <DockItem label="Pac-Man Game" onClick={() => toggleWindow('pacman-game')}>
+        <DockItem label="Flappy Bird" onClick={() => toggleWindow('flappy-bird')}>
           <Gamepad2 className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-gray-600/80 dark:text-white/80 
             group-hover:text-gray-900 dark:group-hover:text-white" />
         </DockItem>
